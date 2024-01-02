@@ -1,4 +1,3 @@
-# example/views.py
 from datetime import datetime
 
 from django.http import HttpResponse
@@ -14,4 +13,4 @@ def index(request):
         visit.save()
     else:
         visit = Visit.objects.create()
-    return render(request, 'index.html', {"visit": visit})
+    return render(request, 'main.html', {"visit": visit})

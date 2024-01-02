@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en"> 
+	<head>
+		<meta charset="UTF-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Stone Yang</title>  <!-- displays website title -->
+		<link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">  <!-- displays website favicon -->
+		<link rel="stylesheet" type = "text/css" href= "{% static 'style.css' %}"/>  <!-- calls css file -->
+		<link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Poiret+One"> <!-- google fonts-->
+		<link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Newsreader">
+	</head>
+	<body>
+		<section id = "header">
+            <div class="nav-bar">
+                <nav>
+                    <img src="{% static 'favicon.png' %}" class="logo"/>
+                    <ul>
+                        <li><a href ="#">Home</a></li>
+                        <li><a href ="#">About</a></li>
+                        <li><a href ="#">Projects</a></li>
+                        <li><a href ="#">Contact</a></li>
+                        <li><a href ="#">Resume</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-text">
+                <h1>Stone Yang</h1>  <!-- prints title -->
+                <p>I'm an <span>Engineering Science/Machine Intelligence</span> student @ the <span>
+                    University of Toronto</span> passionate about <span>full-stack development </span>
+                    and <span>AI/ML</span>!</p>
+            </div>
+		</section>
+        <section id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+            </div>
+        </section>
+		<div id="copyright_tag">  <!-- calls copyright tag format -->
+			<p style="font-size:14px"><b>Copyright © 2024 Stone Yang. All rights reserved.</b></p>  <!-- prints copyright tag-->
+		</div>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="{% static '/main/javascript/main.js' %}"></script>
+	</body>
+</html>

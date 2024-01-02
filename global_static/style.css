@@ -1,0 +1,181 @@
+/*Fonts*/
+@font-face {
+  font-family: 'Auralyess';
+  src: url('fonts/Auralyess.woff2') format('woff2'),
+       url('fonts/Auralyess.woff') format('woff'),
+       url('fonts/Auralyess.ttf') format('ttf'),
+       url('fonts/Auralyess.otf') format('otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*Base*/
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+*,*::before{
+  box-sizing: border-box;
+}
+
+*,*::after{
+  box-sizing: border-box;
+}
+
+html{
+  scroll-behavior:smooth; /*allows the page to scroll smoothly between points*/
+}
+
+/*General*/
+body{
+  background-color: #1B2430;
+  color: #D6D5A8;
+  overflow-x: hidden;
+}
+
+/*Text*/
+h1{
+  font-family: Auralyess, Verdana; /*declares text format*/
+  font-weight: 100;
+  color: #D6D5A8;
+}
+
+p{
+  font-size: 30px;
+  font-family: Newsreader, Verdana; /*declares text format*/
+  font-weight: 100;
+  color: #D6D5A8;
+}
+
+/*Sectional Elements*/
+nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+nav ul li{
+  display: inline-block;
+  list-style: none;
+  margin: 0px 40px;
+}
+
+nav ul li a{
+  color: #D6D5A8;
+  text-decoration: none;
+  font-family: Newsreader, Verdana;
+  font-weight: 100;
+  font-size: 20px;
+  position: relative;
+}
+
+nav ul li a::after{
+  color: #D6D5A8;
+  content: '';
+  width: 0;
+  height: 3px;
+  background: #FFE569;
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transition: 0.5s;
+}
+
+nav ul li a:hover::after{
+  color: #D6D5A8;
+  content: '';
+  width: 100%;
+  height: 3px;
+  background: #FFE569;
+  position: absolute;
+  left: 0px;
+  bottom: -6px;
+}
+
+/*Text Classes*/
+.nav-bar{
+  padding: 1.5% 8%;
+  background: #1B2430;
+  width: 101.5%;
+  z-index: 1;
+  box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.85);
+  position: relative;
+  top: 0;
+}
+
+/*Image Classes*/
+.logo{
+  width: 100px;
+  height: 100px;
+}
+
+.header-text h1{
+  margin-top: 5%;
+  margin-left: 8%;
+  font-size: 150px;
+  font-family: Auralyess, Verdana; /*declares text format*/
+  font-weight: 100;
+  text-shadow: 6px 6px #090c0f;
+  color: #D6D5A8;
+}
+
+.header-text p {
+  margin-top: 2%;
+  margin-left: 8%;
+  width: 45%;
+  position: relative;
+  line-height: 35px;
+  overflow: hidden;
+}
+
+.header-text p span {
+  background: linear-gradient(60deg, #dc991e, #ecc76a, #ce8712, #f3d47f, #f6d88a, #dc991e);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-slide 5s linear infinite;
+  display: inline-block;
+}
+
+@keyframes gradient-slide {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/*Text IDs/Tags*/
+#header{
+  width: 100vw;
+  height: 100vh;
+  background-image: url(images/background5.png);
+  background-repeat: no-repeat;
+  background-position: 90% 100%;
+}
+
+#copyright_tag{
+  overflow: hidden;
+  background-color:#1B2430;
+  width:101.5%; /*declares copyright tag format*/
+  text-align:center;
+  position: relative;
+  top: 400px; /*declares copyright tag position*/
+}
+
+/* About_____________________ */
+.container{
+  padding: 1.5% 8%;
+  background: #1B2430;
+  width: 105%;
+  z-index: 1;
+  box-shadow: 0px -15px 25px rgba(0, 0, 0, 0.85);
+  position: relative;
+  top: 0;
+}
