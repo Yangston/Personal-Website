@@ -3,7 +3,15 @@ from datetime import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import Visit
 
 
 def index(request):
-    return render(request, 'index.html')
+    visits = Visit.objects.all()
+    if visits.exists():
+        visit = visits.first()
+        visit.count += 1
+        visit.save()
+    else:
+        visit = Visit.objects.create()
+    return render(request, 'index.html', {"visit": visit})
