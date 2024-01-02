@@ -1,14 +1,26 @@
 {
-  "builds": [
+  "builds":[
     {
       "src": "vercel_app/wsgi.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "build.sh",
+      "use": "@vercel/static-build",
+      "config": {
+          "distDir": "staticfiles"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "vercel_app/wsgi.py"
+        "src": "/static/(.*)",
+        "dest": "/static/$1"
+    },
+    {
+        "src": "/(.*)",
+        "dest": "vercel_app/wsgi.py"
     }
-  ]
+  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
