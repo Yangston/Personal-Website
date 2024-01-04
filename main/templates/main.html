@@ -12,6 +12,7 @@
 		<link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Newsreader">
 	</head>
 	<body>
+<!-- header__________________________ -->
 		<section id = "header">
             <div class="nav-bar">
                 <nav>
@@ -32,13 +33,30 @@
                     and <span>AI/ML</span>!</p>
             </div>
 		</section>
+<!-- about_____________________________ -->
         <section id="about">
             <div class="container">
                 <div class="row">
-                    <div class="col-1">
-
+                    <div id="col-1">
+                        <img src = "{% static 'images/about2.jpg' %}"/>
                     </div>
-                    <div class="col-1"></div>
+                    <div id="col-2">
+                        <h2>About Me</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- projects_________________________ -->
+        <section id = "projects">
+            <div class="container">
+                <div class="project">
+                    <img src="project-1.jpg" alt="Project 1 Image">
+                    <div class="project-info">
+                    <h2 class="project-title">Project Name One</h2>
+                    <p class="project-date">January 2021</p>
+                    <p class="project-description">A short description of project one. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p class="project-tech">HTML, CSS, JavaScript</p>
+                    </div>
                 </div>
             </div>
         </section>
