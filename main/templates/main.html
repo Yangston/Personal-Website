@@ -42,6 +42,32 @@
                     </div>
                     <div id="col-2">
                         <h2>About Me</h2>
+                        <div class="about-titles">
+                            <div class="about-tabs active-tab" onclick ="selectTab('bio')">Bio</div>
+                            <div class="about-tabs" onclick ="selectTab('hobbies')">Hobbies</div>
+                            <div class="about-tabs" onclick ="selectTab('skills')">Skills</div>
+                        </div>
+                        <div class="tab-contents active-content" id = "bio">
+                            <ul>
+                                <li>bio</li>
+                                <li>Hi! I'm Stone Yang</li>
+                                <li>Hi! I'm Stone Yang</li>
+                            </ul>
+                        </div>
+                        <div class="tab-contents" id = "hobbies">
+                            <ul>
+                                <li>hob</li>
+                                <li>Hi! I'm Stone Yang</li>
+                                <li>Hi! I'm Stone Yang</li>
+                            </ul>
+                        </div>
+                        <div class="tab-contents" id = "skills">
+                            <ul>
+                                <li>skill</li>
+                                <li>Hi! I'm Stone Yang</li>
+                                <li>Hi! I'm Stone Yang</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,13 +75,16 @@
 <!-- projects_________________________ -->
         <section id = "projects">
             <div class="container">
-                <div class="project">
-                    <img src="project-1.jpg" alt="Project 1 Image">
-                    <div class="project-info">
-                    <h2 class="project-title">Project Name One</h2>
-                    <p class="project-date">January 2021</p>
-                    <p class="project-description">A short description of project one. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <p class="project-tech">HTML, CSS, JavaScript</p>
+                <h2>Projects</h2>
+                <div class="project-list">
+                    <div class="project">
+                        <img src = "{% static 'images/Wave.png' %}" height = "300" width = "400">
+                    </div>
+                    <div class="project">
+                        <img src = "{% static 'images/ChefGPT.png' %}" height = "300" width = "400">
+                    </div>
+                    <div class="project">
+                        <img src = "{% static 'images/PlanIt.png' %}" height = "300" width = "400">
                     </div>
                 </div>
             </div>
