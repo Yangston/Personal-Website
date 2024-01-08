@@ -10,20 +10,23 @@
 		<link rel="stylesheet" type = "text/css" href= "{% static 'style.css' %}"/>  <!-- calls css file -->
 		<link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Poiret+One"> <!-- google fonts-->
 		<link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Newsreader">
-	</head>
+        <script src="https://kit.fontawesome.com/868af1bfa3.js" crossorigin="anonymous"></script> 
+    </head>
 	<body>
 <!-- header__________________________ -->
 		<section id = "header">
             <div class="nav-bar">
                 <nav>
                     <img src="{% static 'favicon.png' %}" class="logo"/>
-                    <ul>
+                    <ul id = "menu">
                         <li><a href ="#">Home</a></li>
                         <li><a href ="#">About</a></li>
                         <li><a href ="#">Projects</a></li>
                         <li><a href ="#">Contact</a></li>
                         <li><a href ="#">Resume</a></li>
+                        <i class="fa-solid fa-xmark" onclick="closeMenu()"></i>
                     </ul>
+                    <i class="fa-solid fa-bars" onclick="openMenu()"></i>
                 </nav>
             </div>
             <div class="header-text">
@@ -78,13 +81,44 @@
                 <h2>Projects</h2>
                 <div class="project-list">
                     <div class="project">
-                        <img src = "{% static 'images/Wave.png' %}" height = "300" width = "400">
+                        <img src = "{% static 'images/Wave.png' %}">
+                        <div class="label">
+                            <h3>Wave</h3>
+                            <p>Wave app</p>
+                            <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
                     </div>
                     <div class="project">
-                        <img src = "{% static 'images/ChefGPT.png' %}" height = "300" width = "400">
+                        <img src = "{% static 'images/ChefGPT.png' %}">
+                        <div class="label">
+                            <h3>ChefGPT</h3>
+                            <p>COOKING</p>
+                            <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
                     </div>
                     <div class="project">
-                        <img src = "{% static 'images/PlanIt.png' %}" height = "300" width = "400">
+                        <img src = "{% static 'images/PlanIt.png' %}">
+                        <div class="label">
+                            <h3>PlanIt</h3>
+                            <p>to-do</p>
+                            <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <a href ="#" class = "see-more">See More</a>
+            </div>
+        </section>
+<!-- contact______________________ -->
+        <section id="contact">
+            <div class="container">
+                <div class="row">
+                    <div class="contact-links">
+                        <h2>Contact Me</h2>
+                        <p><i class="fa-solid fa-envelope"></i>stoneyang17@gmail.com</p>
+                        <div class="socials">
+                            <a href ="https://github.com/Yangston" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i></a>
+                            <a href ="https://www.linkedin.com/in/stone-yang-a931861b2/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
