@@ -43,10 +43,14 @@ h1{
 }
 
 h2{
-  font-family: Auralyess, Newsreader, Verdana; /*declares text format*/
-  font-weight: 40;
+  font-family: Poppins, Newsreader, Verdana; /*declares text format*/
+  font-weight: 4000;
   font-size: 50px;
   color: #D6D5A8;
+}
+
+p{
+  font-family: Poppins, Newsreader, Verdana;
 }
 
 /*Sectional Elements*/
@@ -66,8 +70,8 @@ nav ul li{
 nav ul li a{
   color: #D6D5A8;
   text-decoration: none;
-  font-family: Newsreader, Verdana;
-  font-weight: 100;
+  font-family: Poppins, Newsreader, Verdana;
+  font-weight: 200;
   font-size: 20px;
   position: relative;
 }
@@ -124,12 +128,12 @@ nav ul li a:hover::after{
 
 .header-text p {
   font-size: 30px;
-  font-family: Newsreader, Verdana; /*declares text format*/
-  font-weight: 100;
+  font-family: Poppins, Newsreader, Verdana; /*declares text format*/
+  font-weight: 400;
   color: #D6D5A8;
   margin-top: 2%;
   margin-left: 8%;
-  width: 45%;
+  width: 50%;
   position: relative;
   line-height: 35px;
   overflow: hidden;
@@ -190,7 +194,7 @@ nav ul li a:hover::after{
 
 #about p{
   font-size: 20px;
-  font-family: Newsreader, Verdana; /*declares text format*/
+  font-family: Poppins, Newsreader, Verdana; /*declares text format*/
   font-weight: 100;
   color: #D6D5A8;
 }
@@ -217,6 +221,7 @@ nav ul li a:hover::after{
 }
 
 .about-titles{
+  font-family: Poppins, Newsreader, Verdana;
   display: flex;
   margin-top: 20px;
   margin-bottom: 40px;
@@ -225,7 +230,7 @@ nav ul li a:hover::after{
 .about-tabs{
   margin-right: 50px;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 200;
   cursor :pointer;
   position: relative;
 }
@@ -259,6 +264,8 @@ nav ul li a:hover::after{
 }
 
 .tab-contents ul li{
+  font-family: Poppins, Newsreader, Verdana;
+  font-weight: 400;
   list-style: none;
   margin: 10px 0;
 }
