@@ -21,10 +21,10 @@
                     <img src="{% static 'favicon.png' %}" class="logo"/>
                     <ul id = "menu">
                         <li><a href ="#">Home</a></li>
-                        <li><a href ="#">About</a></li>
-                        <li><a href ="#">Projects</a></li>
-                        <li><a href ="#">Contact</a></li>
-                        <li><a href ="#">Resume</a></li>
+                        <li><a href ="#about">About</a></li>
+                        <li><a href ="#projects">Projects</a></li>
+                        <li><a href ="#contact">Contact</a></li>
+                        <li><a href ="{% static 'pdf/Stone_Yang _Resume.pdf' %}"  target="_blank" rel="noopener noreferrer">Resume</a></li>
                         <i class="fa-solid fa-xmark" onclick="closeMenu()"></i>
                     </ul>
                     <i class="fa-solid fa-bars" onclick="openMenu()"></i>
@@ -53,23 +53,36 @@
                         </div>
                         <div class="tab-contents active-content" id = "bio">
                             <ul>
-                                <li>bio</li>
-                                <li>Hi! I'm Stone Yang</li>
-                                <li>Hi! I'm Stone Yang</li>
+                                <li><span>Hi! I'm Stone Yang</span>, an Engineering Science student pursuing a Machine Intelligence major
+                                    at the University of Toronto.
+                                </li>
+                                <li>I recently made a change in my career goals from aerospace engineer to computer science, and I've since been
+                                    exploring everything from full-stack web developpment to machine learning.
+                                </li>
+                                <li>
+                                    What hasn't changed was my passion for innovation, which drives me to create projects that turn
+                                    my silly ideas into a slightly less silly reality.
+                                </li>
                             </ul>
                         </div>
                         <div class="tab-contents" id = "hobbies">
                             <ul>
-                                <li>hob</li>
-                                <li>Hi! I'm Stone Yang</li>
-                                <li>Hi! I'm Stone Yang</li>
+                                <li><span>In my free time</span>, I like to hit the gym and go for runs. Depending on the weather, I also
+                                    like to play frisbee and basketball, and ski in the winters.
+                                </li>
+                                <li><span>I love learning new skills!</span> I'm currently working on my drawing skills, and improving my
+                                    geographical knowledge on the world's countries (I am memorizing mountain ranges to improve in GeoGuessr)
+                                </li>
+                                <li><span>I'm also a huge fan</span> of board games and an adventerous foodie. Depending on my internship offers
+                                    and the size of my bank account, I might also develop a passion for travelling!
+                                </li>
                             </ul>
                         </div>
                         <div class="tab-contents" id = "skills">
                             <ul>
-                                <li>skill</li>
-                                <li>Hi! I'm Stone Yang</li>
-                                <li>Hi! I'm Stone Yang</li>
+                                <li><span>Programming Languages:</span> Python, Java, C, HTML/CSS, JavaScript, SystemVerilog, RISC-V Assembly, Arduino, MATLAB</li>
+                                <li><span>Tools/Frameworks:</span> Django, PostgreSQL, Vercel, TensorFlow, Stable Diffusion, Autodesk Inventor, Fusion 360, Cura, COMSOL Multiphysics,
+                                    Microsoft Word, Excel, Powerpoint, Modelsim</li>
                             </ul>
                         </div>
                     </div>
@@ -82,31 +95,83 @@
                 <h2>Projects</h2>
                 <div class="project-list">
                     <div class="project">
-                        <img src = "{% static 'images/Wave.png' %}">
-                        <div class="label">
+                        <img src = "{% static 'images/AI_proejct_icons/wave_icon.jpeg' %}">
+                        <div class="project-info">
                             <h3>Wave</h3>
-                            <p>Wave app</p>
-                            <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            <ul>
+                                <li>Developed a computer vision program with Python that allows users to control their computers 
+                                    through hand gestures.
+                                </li>
+                                <li>Engineered, trained, and tested a Feed-Forward Neural Network using TensorFlow and Keras, 
+                                    achieving proficiency (95% accuracy) in recognizing over 20 distinct hand signs and actions
+                                </li>
+                                <li>Currently exploring alternative model architectures (LTSM, CNN) to improve model performance 
+                                    for complex gestures
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="side-panel">
+                            <div class="tech-stack">
+                                <ul>
+                                    <li><span>Tech Stack:</span></li>
+                                    <li>Python, TensorFlow</li>
+                                </ul>
+                            </div>
+                            <a href="https://github.com/Yangston/Wave" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                         </div>
                     </div>
                     <div class="project">
-                        <img src = "{% static 'images/ChefGPT.png' %}">
-                        <div class="label">
-                            <h3>ChefGPT</h3>
-                            <p>COOKING</p>
-                            <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <img src = "{% static 'images/AI_proejct_icons/workout_icon.jpeg' %}">
+                        <div class="project-info">
+                            <h3>Repertoire</h3>
+                            <ul>
+                                <li>Developed a computer vision program with Python that allows users to control their computers 
+                                    through hand gestures.
+                                </li>
+                                <li>Engineered, trained, and tested a Feed-Forward Neural Network using TensorFlow and Keras, 
+                                    achieving proficiency (95% accuracy) in recognizing over 20 distinct hand signs and actions
+                                </li>
+                                <li>Currently exploring alternative model architectures (LTSM, CNN) to improve model performance 
+                                    for complex gestures
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="side-panel">
+                            <div class="tech-stack">
+                                <ul>
+                                    <li><span>Tech Stack:</span></li>
+                                    <li>Java</li>
+                                </ul>
+                            </div>
+                            <a href="https://github.com/Yangston/Repertoire" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                         </div>
                     </div>
                     <div class="project">
-                        <img src = "{% static 'images/PlanIt.png' %}">
-                        <div class="label">
+                        <img src = "{% static 'images/AI_proejct_icons/planit_icon.jpeg' %}">
+                        <div class="project-info">
                             <h3>PlanIt</h3>
-                            <p>to-do</p>
+                            <ul>
+                                <li>Created a minimalist Calendar/To-Do app; constructed the user interface with HTML, CSS, and JavaScript.
+                                </li>
+                                <li>Developed the backend infrastructure using Django and PostgreSQL.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="side-panel">
+                            <div class="tech-stack">
+                                <ul>
+                                    <li><span>Tech Stack:</span></li>
+                                    <li>HTML, CSS, JavaScript, Python, Django, PostgreSQL</li>
+                                </ul>
+                            </div>
                             <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                         </div>
                     </div>
                 </div>
-                <a href ="#" class = "see-more">See More</a>
+                <!-- <a href ="#" class = "see-more">See All Projects</a> -->
             </div>
         </section>
 <!-- contact______________________ -->
@@ -115,10 +180,16 @@
                 <div class="row">
                     <div class="contact-links">
                         <h2>Contact Me</h2>
-                        <p><i class="fa-solid fa-envelope"></i>stoneyang17@gmail.com</p>
+                        <div class="emails">
+                            <ul>
+                                <li><a href = "mailto:stoneyang17@gmail.com"><i class="fa-solid fa-envelope"></i>Personal/Work: stoneyang17@gmail.com</a></li>
+                                <li><a href = "mailto:stone.yang@mail.utoronto.ca"><i class="fa-solid fa-inbox"></i>School: stone.yang@mail.utoronto.ca</a></li>
+                            </ul>
+                        </div>
                         <div class="socials">
                             <a href ="https://github.com/Yangston" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i></a>
                             <a href ="https://www.linkedin.com/in/stone-yang-a931861b2/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                            <a href ="https://www.instagram.com/stoneyanggg/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
