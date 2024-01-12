@@ -455,9 +455,16 @@ nav ul li a:hover::after{
   font-size: 24px;
 }
 
+.emails a:hover > i{
+  color: #ce8712;
+  transform: translateY(-5px);
+  transition: transform 0.5s;
+}
+
 .emails a i{
   color: #f6d88a;
   margin-right: 15px;
+  transition: transform 0.5s;
 }
 
 .socials{
