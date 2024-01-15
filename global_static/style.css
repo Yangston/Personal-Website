@@ -500,7 +500,7 @@ nav .fa-solid{
   display: none;
 }
 
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 950px){
   nav .fa-solid{
     display: block;
     font-size: 25px;
@@ -530,7 +530,9 @@ nav .fa-solid{
     left: 25px;
     cursor: pointer;
   }
+} 
 
+@media only screen and (max-width: 800px){
   #header{
     width: 100vw;
     height: 100vh;
@@ -545,16 +547,16 @@ nav .fa-solid{
   }
 
   .header-text h1{
-    margin-top: 15%;
+    margin-top: 10%;
     margin-left: 8%;
-    font-size: 100px;
+    font-size: 90px;
   }
   
-  .header-text p {
-    font-size: 30px;
+  .header-text p{
+    font-size: 25px;
     margin-top: 2%;
     margin-left: 8%;
-    width: 80%;
+    width: 70%;
     line-height: 35px;
   }
 }
