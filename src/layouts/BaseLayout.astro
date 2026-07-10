@@ -2,6 +2,7 @@
 import "@/styles/global.css";
 import Navigation from "@/components/motion/Navigation";
 import { site } from "@/config/site";
+import SpeedInsights from "@vercel/speed-insights/astro";
 
 interface Props {
   title?: string;
@@ -54,5 +55,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       </div>
       <p class="mt-10 text-xs uppercase tracking-[.16em]">© {new Date().getFullYear()} Stone Yang. Built with curiosity.</p>
     </footer>
+    <SpeedInsights />
   </body>
 </html>
