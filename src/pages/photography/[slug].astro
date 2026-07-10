@@ -1,0 +1,28 @@
+---
+import { getPhotography } from "@/lib/content";
+import { render, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CollectionPresentation from "@/components/gallery/CollectionPresentation.astro";
+
+export async function getStaticPaths() {
+  const entries = await getPhotography();
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: CollectionEntry<"photography">; }
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, location, date, description, cover, theme, draft } = entry.data;
+const vars = `--collection-bg:${theme.background};--collection-fg:${theme.foreground};--collection-accent:${theme.accent}`;
+---
+<BaseLayout title={`${title} — Photography by Stone Yang`} description={description} image={cover.src} theme="dark">
+  <div style={vars} class="bg-[var(--collection-bg)] text-[var(--collection-fg)]">
+    <header class="page-grid min-h-[82svh] items-end pb-10 pt-14 md:pb-16">
+      <div class="col-span-6 md:col-span-8"><div class="mb-6 flex flex-wrap gap-3"><span class="eyebrow text-[var(--collection-accent)]">{location} / {date.getFullYear()}</span>{draft && <span class="bg-signal px-2 py-1 text-[10px] font-bold uppercase text-ink">Draft preview</span>}</div><h1 class="font-display text-[clamp(4.5rem,13vw,13rem)] leading-[.72] tracking-[-.075em]">{title}</h1></div>
+      <p class="col-span-5 col-start-2 mt-10 text-sm leading-relaxed opacity-75 md:col-span-3 md:col-start-10">{description}</p>
+    </header>
+    <div class="page-shell"><img src={cover.src} width={cover.width} height={cover.height} alt={cover.alt} class="max-h-[88vh] w-full object-cover" /></div>
+    <CollectionPresentation entry={entry} />
+    <article class="page-grid pb-24 md:pb-40"><div class="prose-editorial col-span-6 md:col-span-7 md:col-start-4"><Content /></div></article>
+  </div>
+</BaseLayout>

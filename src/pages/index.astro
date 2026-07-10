@@ -1,0 +1,59 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import KineticHero from "@/components/motion/KineticHero";
+import Reveal from "@/components/motion/Reveal";
+import MagneticLink from "@/components/motion/MagneticLink";
+import AnimatedRule from "@/components/motion/AnimatedRule";
+import CollectionCard from "@/components/cards/CollectionCard.astro";
+import ProjectCard from "@/components/cards/ProjectCard.astro";
+import { getPhotography, getProjects } from "@/lib/content";
+import { site } from "@/config/site";
+
+const [photography, projects] = await Promise.all([getPhotography(), getProjects()]);
+const featuredPhotography = photography.filter((entry) => entry.data.featured).slice(0, 2);
+const featuredProjects = projects.filter((entry) => entry.data.featured).slice(0, 3);
+---
+<BaseLayout>
+  <KineticHero client:load />
+
+  <section class="page-grid border-b border-ink py-20 md:py-36">
+    <div class="col-span-6 md:col-span-3"><p class="eyebrow text-cobalt">About / 01</p></div>
+    <div class="col-span-6 md:col-span-8 md:col-start-5">
+      <Reveal client:visible>
+        <p class="font-display text-[clamp(2.6rem,6vw,6.4rem)] leading-[.94] tracking-[-.045em]">Engineer by training.<br/><span class="italic text-cobalt">Observer</span> by instinct.</p>
+        <div class="mt-10 grid gap-8 md:grid-cols-2">
+          <p class="text-lg leading-relaxed">{site.bio}</p>
+          <p class="text-sm leading-relaxed text-ink/65">This space is both workshop and field journal: technical work shown honestly, visual work given room to breathe, and experiments that are allowed to feel a little strange.</p>
+        </div>
+        <MagneticLink client:visible href={site.resume} className="mt-10 inline-flex rounded-full bg-ink px-7 py-4 text-sm font-bold uppercase tracking-[.12em] text-paper">Read my résumé ↗</MagneticLink>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="page-shell py-20 md:py-32">
+    <div class="mb-14 flex items-end justify-between gap-6"><div><p class="eyebrow text-signal">Selected photographs / 02</p><h2 class="font-display text-6xl leading-none tracking-[-.06em] md:text-9xl">Field notes.</h2></div><a class="hidden text-sm font-bold uppercase tracking-wider underline underline-offset-6 md:block" href="/photography">All collections</a></div>
+    {featuredPhotography.length ? (
+      <div class="grid gap-x-8 gap-y-20 md:grid-cols-2">{featuredPhotography.map((entry, index) => <CollectionCard entry={entry} index={index} />)}</div>
+    ) : (
+      <div class="grid min-h-72 place-items-center border border-dashed border-ink/35 bg-[linear-gradient(135deg,transparent_40%,rgba(49,87,255,.12)_40%,rgba(49,87,255,.12)_60%,transparent_60%)] p-8 text-center">
+        <div><p class="font-display text-4xl italic md:text-6xl">The contact sheets are developing.</p><p class="mt-3 text-sm uppercase tracking-widest">Photography collections are being prepared.</p></div>
+      </div>
+    )}
+    <a class="mt-8 inline-block text-sm font-bold uppercase tracking-wider underline underline-offset-6 md:hidden" href="/photography">All collections</a>
+  </section>
+
+  <section class="bg-ink px-[var(--page-gutter)] py-20 text-paper md:py-32">
+    <div class="mb-12 grid gap-6 md:grid-cols-12"><p class="eyebrow text-signal md:col-span-3">Selected projects / 03</p><h2 class="font-display text-6xl leading-[.8] tracking-[-.06em] md:col-span-9 md:text-9xl">Ideas with<br/><span class="text-cobalt italic">working parts.</span></h2></div>
+    <AnimatedRule client:visible className="border-paper/60" />
+    {featuredProjects.length ? featuredProjects.map((entry, index) => <ProjectCard entry={entry} index={index} />) : <div class="py-24 text-center"><p class="font-display text-4xl italic md:text-6xl">Old builds, new case studies.</p><p class="mt-3 text-sm uppercase tracking-widest text-paper/65">The project archive is being remastered.</p></div>}
+    <a class="mt-8 inline-block text-sm font-bold uppercase tracking-wider underline underline-offset-6" href="/projects">Explore projects ↗</a>
+  </section>
+
+  <section class="page-grid py-20 md:py-36">
+    <p class="eyebrow col-span-6 text-cobalt md:col-span-3">Contact / 04</p>
+    <div class="col-span-6 md:col-span-9">
+      <p class="font-display text-[clamp(3.5rem,9vw,9rem)] leading-[.78] tracking-[-.065em]">Let’s make<br/><a class="italic text-signal underline decoration-4 underline-offset-8" href={`mailto:${site.email}`}>something odd.</a></p>
+      <p class="mt-10 max-w-xl text-lg">Have a project, experiment, photo walk, or impossible prototype in mind? Say hello.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import DemoLauncher from "@/components/demos/DemoLauncher";
+import { getProjects } from "@/lib/content";
+
+export async function getStaticPaths() {
+  const entries = await getProjects();
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+interface Props { entry: CollectionEntry<"projects">; }
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, summary, year, status, role, stack, cover, links, demo, draft } = entry.data;
+const jsonLd = { "@context": "https://schema.org", "@type": "CreativeWork", name: title, description: summary, creator: { "@type": "Person", name: "Stone Yang" }, dateCreated: String(year) };
+---
+<BaseLayout title={`${title} — Stone Yang`} description={summary} image={cover.src}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <header class="page-grid pb-12 pt-16 md:pb-20 md:pt-24">
+    <div class="col-span-6 md:col-span-9"><div class="mb-6 flex flex-wrap items-center gap-3"><p class="eyebrow text-cobalt">Project / {year}</p>{draft && <span class="bg-signal px-2 py-1 text-[10px] font-bold uppercase">Draft preview</span>}</div><h1 class="font-display text-[clamp(5rem,15vw,14rem)] leading-[.7] tracking-[-.075em]">{title}</h1></div>
+    <div class="col-span-5 col-start-2 mt-12 md:col-span-3 md:col-start-10"><p class="text-lg leading-tight">{summary}</p><dl class="mt-8 grid grid-cols-2 gap-5 border-t border-ink pt-4 text-xs uppercase tracking-wider"><div><dt class="text-ink/50">Role</dt><dd class="mt-1 font-bold">{role}</dd></div><div><dt class="text-ink/50">Status</dt><dd class="mt-1 font-bold">{status}</dd></div></dl></div>
+  </header>
+  <div class="page-shell"><img src={cover.src} width={cover.width} height={cover.height} alt={cover.alt} class="max-h-[80vh] w-full bg-ink object-cover" /></div>
+  <div class="page-grid py-16 md:py-28"><aside class="col-span-6 mb-10 md:col-span-3 md:mb-0"><p class="eyebrow text-signal">Built with</p><ul class="mt-4 flex flex-wrap gap-2">{stack.map((item) => <li class="border border-ink px-3 py-2 text-xs font-bold uppercase tracking-wider">{item}</li>)}</ul><div class="mt-8 flex gap-5 text-sm font-bold uppercase tracking-wider">{links.repository && <a class="underline underline-offset-4" href={links.repository} target="_blank" rel="noreferrer">Source ↗</a>}{links.live && <a class="underline underline-offset-4" href={links.live} target="_blank" rel="noreferrer">Live ↗</a>}</div></aside><article class="prose-editorial col-span-6 md:col-span-7 md:col-start-5"><Content /></article></div>
+  <div class="page-shell pb-24 md:pb-36"><DemoLauncher client:visible demo={demo} /></div>
+</BaseLayout>

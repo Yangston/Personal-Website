@@ -1,21 +1,10 @@
 {
-  "builds":[
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
     {
-      "src": "personal_website/wsgi.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "build.sh",
-      "use": "@vercel/static-build",
-      "config": {
-          "distDir": "staticfiles"
-      }
-    }
-  ],
-  "routes": [
-    {
-        "src": "/(.*)",
-        "dest": "personal_website/wsgi.py"
+      "source": "/static/pdf/Resume.pdf",
+      "destination": "/resume.pdf",
+      "permanent": true
     }
   ]
 }

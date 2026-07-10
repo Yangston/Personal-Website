@@ -1,0 +1,15 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CollectionCard from "@/components/cards/CollectionCard.astro";
+import { getPhotography } from "@/lib/content";
+const collections = await getPhotography();
+---
+<BaseLayout title="Photography — Stone Yang" description="Trips, collections, photographs, and films by Stone Yang.">
+  <header class="page-grid min-h-[68svh] items-end border-b border-ink pb-10 pt-16 md:pb-16">
+    <div class="col-span-6 md:col-span-9"><p class="eyebrow mb-8 text-signal">Photography archive</p><h1 class="display-title">Field<br/><span class="ml-[12vw] italic text-cobalt">notes.</span></h1></div>
+    <p class="col-span-5 col-start-2 mt-10 max-w-sm text-sm leading-relaxed md:col-span-3 md:col-start-10 md:mt-0">Trips, fragments, moving images, and evidence that I occasionally leave the computer.</p>
+  </header>
+  <section class="page-shell py-16 md:py-28">
+    {collections.length ? <div class="grid gap-x-8 gap-y-28 md:grid-cols-2">{collections.map((entry, index) => <CollectionCard entry={entry} index={index} />)}</div> : <div class="grid min-h-[45vh] place-items-center border border-dashed border-ink/35 p-8 text-center"><div><p class="font-display text-5xl italic md:text-7xl">Nothing rushed.</p><p class="mt-4 max-w-md text-sm uppercase leading-relaxed tracking-widest">The first collection will appear when it is ready. The gallery system is live; the photographs are still being selected.</p></div></div>}
+  </section>
+</BaseLayout>
