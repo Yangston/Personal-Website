@@ -2,6 +2,7 @@
 import "@/styles/global.css";
 import Navigation from "@/components/motion/Navigation";
 import { site } from "@/config/site";
+import SpeedInsights from "@vercel/speed-insights/astro";
 
 interface Props {
   title?: string;
@@ -41,6 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </style>
   </head>
   <body class="grain">
+    <SpeedInsights />
     <a href="#main-content" class="fixed left-4 top-4 z-[100] -translate-y-24 bg-ink px-4 py-3 text-paper transition-transform focus:translate-y-0">Skip to content</a>
     <Navigation client:load currentPath={Astro.url.pathname} items={site.nav} />
     <main id="main-content"><slot /></main>
