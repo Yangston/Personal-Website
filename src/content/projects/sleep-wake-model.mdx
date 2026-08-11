@@ -1,0 +1,41 @@
+---
+title: "Sleep–Wake Model"
+year: 2025
+status: "Published research"
+role: "Second author and machine-learning researcher"
+summary: "A device-agnostic deep-learning model for sleep–wake determination from wrist accelerometry, validated against clinical polysomnography across three devices and a diverse adult cohort."
+stack: ["Deep Learning", "Time Series", "Actigraphy", "Clinical Validation"]
+cover:
+  src: "/media/projects/sleep-wake-model.svg"
+  width: 1600
+  height: 900
+  alt: "Triaxial wrist motion signals flowing through a sleep and wake classification model"
+draft: false
+featured: true
+links:
+  live: "https://arxiv.org/abs/2512.01986"
+demo:
+  type: "none"
+---
+
+## A model that travels between devices
+
+_A robust generalizable device-agnostic deep learning model for sleep-wake determination from triaxial wrist accelerometry_ asks whether a single model can remain useful when the wrist sensor, patient population, and sleep disorder change. I am the paper's second author.
+
+Wrist accelerometry is convenient enough for long recordings outside a laboratory, but movement is only an indirect measure of sleep. Quiet wakefulness is particularly difficult: a motion-based model can easily mistake stillness for sleep, producing reassuring aggregate accuracy while missing the state clinicians most need it to distinguish.
+
+## Grounded in clinical sleep testing
+
+The study paired wrist accelerometry with simultaneous polysomnography for 453 adults undergoing clinical sleep testing. Participants spanned a wide age range, included people with and without sleep disorders, and wore one of three accelerometer models. That design made cross-device and clinical generalization part of the evaluation rather than an assumption made after training.
+
+Signals were summarized in 30-second epochs. The network first learned three states—wake, sleep, and sleep with arousals—before a decision tree collapsed those outputs into the final wake-versus-sleep determination. Training deliberately emphasized subjects with low sleep efficiency and/or high arousal index to confront difficult wake detection instead of optimizing around easy sleepers.
+
+## What the evaluation showed
+
+On held-out recordings, the model reported an F1 score of 0.86, sleep sensitivity of 0.87, and wake specificity of 0.78. Its estimates also correlated with polysomnography-derived total sleep time (R = 0.69) and sleep efficiency (R = 0.63).
+
+Performance remained consistent across the three accelerometer models and robust in the presence of conditions including sleep apnea and periodic limb movements. The important result is not a single headline score; it is evidence that the learned representation was not tied to one piece of hardware or one unusually tidy patient group.
+
+## Collaborative research
+
+As second author, I contributed to the machine-learning research and the work of turning a clinical question into a reproducible evaluation. The project sits at the boundary I find most interesting: models are only meaningful when their validation reflects the people, instruments, and failure modes they will actually encounter. [Read the paper on arXiv](https://arxiv.org/abs/2512.01986).

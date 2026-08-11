@@ -1,0 +1,41 @@
+---
+title: "Poker Bot"
+year: 2025
+status: "Working prototype"
+role: "Mechatronics design and prototyping"
+summary: "A rotating tabletop robot that feeds and throws playing cards to multiple seats, turning a compact mechanism into an automated Texas Hold’em dealer."
+stack: ["Mechatronics", "Embedded Systems", "CAD", "Rapid Prototyping"]
+cover:
+  src: "/media/projects/robotic-card-thrower.svg"
+  width: 1600
+  height: 900
+  alt: "Schematic of a rotating card-throwing robot launching playing cards around a table"
+draft: false
+featured: true
+links:
+  live: "https://youtu.be/JpeWfCMttr4"
+demo:
+  type: "iframe"
+  url: "https://www.youtube-nocookie.com/embed/JpeWfCMttr4"
+  title: "Poker Bot playing-card dealer demonstration"
+---
+
+## Dealing beyond arm's reach
+
+This MIE438 prototype turns the repetitive mechanics of dealing cards into a compact robotics problem. Instead of moving a large arm between players, the machine stays at the centre of the table: it rotates toward a seat, advances one card from the deck, and accelerates that card through a throwing stage.
+
+The demonstration uses the machine as a Texas Hold'em dealer, distributing private cards to multiple positions around the table and placing shared cards into the centre. The result is playful, but the underlying challenge is precise sequencing across mechanisms with very different dynamics.
+
+## Feed, aim, launch
+
+The design separates the job into three coordinated actions. A feed path isolates a single card, a motor-driven launcher imparts velocity, and an indexed rotating base aims the mechanism before release. Embedded control turns those actions into a repeatable cycle: settle the heading, spin the launcher, advance one card, release, and move to the next target.
+
+That sequence exposes the practical side of mechatronics. Playing cards are light, flexible, and sensitive to humidity, surface wear, roller pressure, and tiny alignment changes. A mechanism can work once and still be a poor dealer; useful iteration means watching where variability enters and making the physical path tolerant of it.
+
+## A prototype you can read
+
+The visible housings, exposed electronics, and direct mechanical layout keep the prototype legible. You can follow energy from the motors into the card and see how the rotating platform converts one launcher into a multi-seat system. Rapid fabrication made it possible to change guides, clearances, and mounting geometry without rebuilding the entire machine.
+
+## What the robot taught us
+
+The most valuable lesson was integration. CAD, controls, electronics, and friction all meet at the instant a card leaves the machine; none can be tuned in isolation. The finished prototype demonstrates a complete dealing routine while leaving clear paths for improved deck isolation, closed-loop heading, and per-seat launch calibration. [Watch the full demonstration on YouTube](https://youtu.be/JpeWfCMttr4).

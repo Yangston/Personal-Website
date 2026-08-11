@@ -10,3 +10,10 @@ dist/
 .astro/
 test-results/
 playwright-report/
+.private/
+.venv-photo-calibration/
+__pycache__/
+*.py[cod]
+# Raw photography sources are local archival inputs. Generated WebPs and public
+# indexes are versioned; originals are backed up outside Git and Vercel.
+src/content/photography/iCloud Photos/

@@ -1,0 +1,92 @@
+---
+const words = ["Engineer", "Photographer", "Builder"];
+---
+
+<section
+  class="kinetic-hero relative min-h-[calc(100svh-4.5rem)] overflow-hidden border-b border-ink/20 px-[var(--page-gutter)] py-12 md:min-h-[calc(100svh-5.5rem)] md:py-16"
+>
+  <div
+    data-hero-drift="down"
+    aria-hidden="true"
+    class="absolute -right-[8vw] top-[12%] size-[clamp(13rem,36vw,36rem)] rotate-12 rounded-full border-[clamp(1.5rem,5vw,5rem)] border-cobalt mix-blend-multiply"
+  >
+  </div>
+  <div
+    data-hero-drift="up"
+    aria-hidden="true"
+    class="absolute bottom-[7%] left-[46%] h-[42%] w-[10%] -rotate-[28deg] bg-signal mix-blend-multiply"
+  >
+  </div>
+  <div class="relative z-10 flex min-h-[75svh] flex-col justify-between">
+    <p class="eyebrow flex items-center gap-3">
+      <span class="inline-block size-2 rounded-full bg-signal"></span>Portfolio
+      / Vancouver
+    </p>
+    <div>
+      <div class="overflow-hidden pb-3">
+        <h1
+          class="hero-word hero-word-first font-display text-[clamp(5.5rem,19vw,18rem)] font-semibold leading-[.66] tracking-[-.09em]"
+        >
+          Stone
+        </h1>
+      </div>
+      <div class="flex items-end justify-between gap-4 overflow-hidden pb-4">
+        <h1
+          class="hero-word hero-word-second ml-[8vw] font-display text-[clamp(5.5rem,19vw,18rem)] font-semibold leading-[.66] tracking-[-.09em]"
+        >
+          Yang
+        </h1>
+        <span
+          aria-hidden="true"
+          class="mb-1 hidden text-5xl text-cobalt md:block">↘</span
+        >
+      </div>
+    </div>
+    <div class="grid gap-8 border-t border-ink pt-5 md:grid-cols-2">
+      <p class="max-w-xl text-lg font-medium leading-tight md:text-2xl">
+        I build intelligent systems and collect the strange, quiet moments
+        around them.
+      </p>
+      <ul class="flex flex-wrap items-end gap-x-5 gap-y-1 md:justify-end">
+        {
+          words.map((word, index) => (
+            <li
+              class="hero-role font-display text-2xl italic md:text-3xl"
+              style={`--hero-role-index:${index}`}
+            >
+              {word}
+              {index < 2 ? "," : "."}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  const hero = document.querySelector<HTMLElement>(".kinetic-hero");
+  if (hero && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const up = hero.querySelector<HTMLElement>("[data-hero-drift='up']");
+    const down = hero.querySelector<HTMLElement>("[data-hero-drift='down']");
+    let queued = false;
+    const update = () => {
+      const progress = Math.min(
+        1,
+        Math.max(0, -hero.getBoundingClientRect().top / hero.offsetHeight),
+      );
+      up?.style.setProperty("translate", `0 ${-90 * progress}px`);
+      down?.style.setProperty("translate", `0 ${130 * progress}px`);
+      queued = false;
+    };
+    addEventListener(
+      "scroll",
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
+  }
+</script>

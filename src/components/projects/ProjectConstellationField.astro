@@ -1,0 +1,574 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+
+type Point = readonly [number, number];
+
+type Constellation = {
+  motif: string;
+  points: readonly Point[];
+  edges: readonly (readonly [number, number])[];
+  accent: string;
+};
+
+const { projects } = Astro.props;
+
+const constellationByProject: Record<string, Constellation> = {
+  sightline: {
+    motif: "spatial sightline",
+    points: [
+      [22, 112],
+      [54, 86],
+      [88, 96],
+      [116, 54],
+      [148, 76],
+      [178, 38],
+      [214, 62],
+      [194, 112],
+      [146, 128],
+      [102, 120],
+    ],
+    edges: [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 4],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+      [7, 8],
+      [8, 9],
+      [9, 2],
+      [3, 8],
+    ],
+    accent: "#ff7656",
+  },
+  "sleep-wake-model": {
+    motif: "sleep signal",
+    points: [
+      [24, 92],
+      [54, 90],
+      [78, 48],
+      [108, 126],
+      [136, 66],
+      [164, 94],
+      [196, 88],
+      [218, 90],
+    ],
+    edges: [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 4],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+    ],
+    accent: "#c4d37b",
+  },
+  "robotic-card-thrower": {
+    motif: "poker dealer",
+    points: [
+      [28, 46],
+      [56, 34],
+      [68, 78],
+      [40, 88],
+      [98, 20],
+      [130, 20],
+      [130, 68],
+      [98, 68],
+      [174, 40],
+      [206, 54],
+      [190, 96],
+      [158, 82],
+      [116, 132],
+    ],
+    edges: [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 0],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+      [7, 4],
+      [8, 9],
+      [9, 10],
+      [10, 11],
+      [11, 8],
+      [12, 2],
+      [12, 6],
+      [12, 11],
+    ],
+    accent: "#8da7ff",
+  },
+};
+
+const fallbackConstellations = Object.values(constellationByProject);
+---
+
+<section
+  class="project-sky"
+  data-project-sky
+  aria-labelledby="project-sky-title"
+>
+  <header class="project-sky-heading">
+    <p class="eyebrow">
+      Project observatory / {String(projects.length).padStart(3, "0")}
+    </p>
+    <h1 id="project-sky-title">Things I’ve <em>built.</em></h1>
+    <p class="project-sky-intro">
+      Software, intelligent systems, and experiments charted by the questions
+      that shaped them.
+    </p>
+  </header>
+
+  {
+    projects.length ? (
+      <div class="project-constellations">
+        {projects.map((entry, index) => {
+          const constellation =
+            constellationByProject[entry.id] ??
+            fallbackConstellations[index % fallbackConstellations.length];
+          const { title, year, status, stack, summary, cover } = entry.data;
+          return (
+            <a
+              class="project-constellation"
+              data-project-constellation
+              data-project-motif={constellation.motif}
+              href={`/projects/${entry.id}`}
+              data-astro-reload
+              aria-label={`Explore ${title}, ${year}`}
+              style={`--constellation-accent:${constellation.accent};--constellation-delay:${index * 0.14}s`}
+            >
+              <svg
+                class="constellation-drawing"
+                viewBox="0 0 240 160"
+                aria-hidden="true"
+              >
+                <g class="constellation-lines">
+                  {constellation.edges.map(([from, to]) => (
+                    <line
+                      x1={constellation.points[from][0]}
+                      y1={constellation.points[from][1]}
+                      x2={constellation.points[to][0]}
+                      y2={constellation.points[to][1]}
+                    />
+                  ))}
+                </g>
+                <g class="constellation-stars">
+                  {constellation.points.map(([x, y], pointIndex) => (
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={pointIndex === 2 || pointIndex === 4 ? 3.1 : 2.1}
+                    />
+                  ))}
+                </g>
+              </svg>
+              <span class="project-constellation-copy">
+                <span class="project-constellation-title">{title}</span>
+                <span class="project-constellation-meta">
+                  {year} / {status}
+                </span>
+                <span class="project-constellation-summary">
+                  <img
+                    class="project-constellation-preview-image"
+                    src={cover.src}
+                    width={cover.width}
+                    height={cover.height}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="project-constellation-summary-copy">
+                    {summary}
+                  </span>
+                </span>
+                <span class="project-constellation-stack">
+                  {stack.slice(0, 3).join(" · ")}
+                </span>
+              </span>
+              <span class="project-constellation-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="project-sky-empty">
+        <span aria-hidden="true">✦</span>
+        <p class="font-display">New constellations are being charted.</p>
+        <small>Return when the next signal arrives.</small>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .project-sky {
+    position: relative;
+    min-height: 100svh;
+    padding: clamp(6.5rem, 14vh, 9rem) var(--page-gutter)
+      clamp(10rem, 22vh, 16rem);
+    overflow: hidden;
+    color: #f0eadc;
+    background: transparent;
+    isolation: isolate;
+  }
+
+  .project-sky-heading {
+    position: fixed;
+    z-index: 2;
+    top: clamp(6.5rem, 14vh, 9rem);
+    left: var(--page-gutter);
+    width: min(38rem, 42vw);
+    pointer-events: none;
+  }
+
+  .project-sky-heading .eyebrow {
+    color: #ff7656;
+  }
+
+  .project-sky-heading h1 {
+    max-width: 8ch;
+    margin: 0.5rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(3.6rem, 7vw, 7.4rem);
+    font-weight: 520;
+    line-height: 0.78;
+    letter-spacing: -0.065em;
+  }
+
+  .project-sky-heading h1 em {
+    color: #c4d37b;
+    font-weight: inherit;
+  }
+
+  .project-sky-intro {
+    width: min(28rem, 100%);
+    margin: 1.5rem 0 0;
+    color: #f0eadca8;
+    font-size: clamp(0.75rem, 1vw, 0.9rem);
+    line-height: 1.6;
+  }
+
+  .project-constellations {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    row-gap: clamp(1.5rem, 4vh, 3rem);
+    align-items: start;
+    margin-top: clamp(-1.5rem, -3vh, -0.5rem);
+  }
+
+  .project-constellation {
+    position: relative;
+    grid-column: 7 / span 5;
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    animation: constellation-arrive 0.9s var(--constellation-delay)
+      var(--ease-out-expo) both;
+  }
+
+  .project-constellation:nth-child(3n + 2) {
+    grid-column: 5 / span 4;
+  }
+
+  .project-constellation:nth-child(3n) {
+    grid-column: 8 / span 4;
+  }
+
+  .constellation-drawing {
+    display: block;
+    width: 100%;
+    overflow: visible;
+  }
+
+  .constellation-lines line {
+    vector-effect: non-scaling-stroke;
+    stroke: #f0eadc4d;
+    stroke-width: 1px;
+    stroke-dasharray: 240;
+    animation: constellation-draw 1.2s calc(0.25s + var(--constellation-delay))
+      var(--ease-out-expo) both;
+    transition: stroke 300ms ease;
+  }
+
+  .constellation-stars circle {
+    fill: #f6f0df;
+    stroke: var(--constellation-accent);
+    stroke-width: 0.8px;
+    filter: drop-shadow(0 0 4px #f6f0dfcc);
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      fill 250ms ease,
+      transform 450ms var(--ease-out-expo);
+  }
+
+  .project-constellation-copy {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 1rem;
+    width: calc(100% - 2rem);
+    margin: -0.5rem 0 0 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #f0eadc4d;
+  }
+
+  .project-constellation-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2vw, 2.25rem);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .project-constellation-meta,
+  .project-constellation-stack {
+    color: var(--constellation-accent);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .project-constellation-meta {
+    align-self: end;
+    white-space: nowrap;
+  }
+
+  .project-constellation-summary {
+    position: fixed;
+    z-index: 4;
+    bottom: clamp(3rem, 8vh, 6rem);
+    left: var(--page-gutter);
+    width: min(34vw, 30rem);
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(240, 234, 220, 0.34);
+    color: rgba(240, 234, 220, 0.72);
+    font-size: clamp(0.92rem, 1.15vw, 1.08rem);
+    line-height: 1.55;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.8rem);
+    transition:
+      opacity 180ms ease,
+      transform 320ms var(--ease-out-expo);
+  }
+
+  .project-constellation-summary::before {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--constellation-accent);
+    content: "Project signal";
+    font: 0.58rem/1 var(--font-code);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .project-constellation-preview-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 1rem;
+    object-fit: cover;
+    border: 1px solid
+      color-mix(in srgb, var(--constellation-accent) 45%, transparent);
+    background: #111713;
+    filter: saturate(0.86) contrast(1.05);
+  }
+
+  .project-constellation-summary-copy {
+    display: block;
+    max-width: 42ch;
+  }
+
+  .project-constellation-stack {
+    grid-column: 1 / -1;
+    align-self: start;
+    text-align: left;
+  }
+
+  .project-constellation-arrow {
+    position: absolute;
+    right: 0.4rem;
+    bottom: 0.2rem;
+    color: var(--constellation-accent);
+    font-size: 1.1rem;
+    transition: transform 450ms var(--ease-out-expo);
+  }
+
+  .project-constellation:hover .constellation-lines line,
+  .project-constellation:focus-visible .constellation-lines line {
+    stroke: var(--constellation-accent);
+  }
+
+  .project-constellation:hover .constellation-stars circle,
+  .project-constellation:focus-visible .constellation-stars circle {
+    fill: var(--constellation-accent);
+    transform: scale(1.65);
+  }
+
+  .project-constellation:hover .project-constellation-arrow,
+  .project-constellation:focus-visible .project-constellation-arrow {
+    transform: translate(0.25rem, -0.25rem);
+  }
+
+  .project-constellation:hover .project-constellation-summary,
+  .project-constellation:focus-visible .project-constellation-summary {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .project-sky-empty {
+    position: absolute;
+    top: 54%;
+    left: 50%;
+    width: min(32rem, calc(100% - 2rem));
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .project-sky-empty > span {
+    color: #ff7656;
+    font-size: 1.5rem;
+  }
+
+  .project-sky-empty p {
+    margin: 1rem 0 0.5rem;
+    font-size: clamp(2rem, 4vw, 4rem);
+    line-height: 0.95;
+  }
+
+  .project-sky-empty small {
+    color: #f0eadc80;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  @keyframes constellation-arrive {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes constellation-draw {
+    from {
+      stroke-dashoffset: 240;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (max-width: 1050px) {
+    .project-sky-heading {
+      width: min(38rem, 70vw);
+    }
+
+    .project-constellations {
+      margin-top: 0;
+    }
+
+    .project-constellation {
+      grid-column: 6 / -1;
+    }
+
+    .project-constellation:nth-child(3n + 2) {
+      grid-column: 5 / span 6;
+    }
+
+    .project-constellation:nth-child(3n) {
+      grid-column: 7 / -1;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .project-sky {
+      min-height: 100svh;
+      padding: 6rem 0.75rem 8rem;
+    }
+
+    .project-sky-heading {
+      top: 6rem;
+      left: 0.75rem;
+      width: 100%;
+      padding-inline: max(0.25rem, calc(var(--page-gutter) - 0.75rem));
+    }
+
+    .project-sky-heading h1 {
+      max-width: 7ch;
+      font-size: clamp(3.2rem, 16vw, 5rem);
+    }
+
+    .project-sky-intro {
+      max-width: 21rem;
+      margin-top: 1rem;
+    }
+
+    .project-constellations {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      row-gap: 2rem;
+      margin-top: 10.5rem;
+    }
+
+    .project-constellation {
+      grid-column: 2 / -1;
+      width: 100%;
+    }
+
+    .project-constellation:nth-child(3n + 2) {
+      grid-column: 2 / span 4;
+    }
+
+    .project-constellation:nth-child(3n) {
+      grid-column: 3 / -1;
+    }
+
+    .constellation-drawing {
+      height: 9rem;
+    }
+
+    .project-constellation-copy {
+      margin-top: -0.75rem;
+    }
+
+    .project-constellation-title {
+      font-size: 1.75rem;
+    }
+
+    .project-constellation-summary {
+      position: absolute;
+      top: 42%;
+      bottom: auto;
+      left: 0.75rem;
+      width: min(19rem, calc(100% - 1.5rem));
+      padding: 0.75rem;
+      border: 1px solid
+        color-mix(in srgb, var(--constellation-accent) 65%, transparent);
+      background: #090c0bf2;
+      box-shadow: 0 1rem 3rem #0009;
+      transform: translateY(0.6rem);
+      animation: none;
+      translate: none;
+    }
+
+    .project-constellation-preview-image {
+      margin-bottom: 0.75rem;
+    }
+
+    .project-constellation-stack {
+      grid-column: 1 / -1;
+      text-align: left;
+    }
+  }
+</style>

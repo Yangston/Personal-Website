@@ -1,0 +1,223 @@
+---
+import EarthProxy from "./EarthProxy.astro";
+
+interface Props {
+  scene: "home" | "travel" | "projects";
+}
+
+const { scene } = Astro.props;
+
+let seed = 913;
+const random = () => {
+  seed = (seed * 16807) % 2147483647;
+  return (seed - 1) / 2147483646;
+};
+const rounded = (value: number, digits: number) =>
+  Number(value.toFixed(digits));
+const stars = Array.from({ length: 156 }, (_, index) => ({
+  x: rounded(random() * 1200, 2),
+  y: rounded(random() * 800, 2),
+  radius: rounded(0.42 + random() * (index % 19 === 0 ? 2.15 : 0.95), 3),
+  opacity: rounded(0.2 + random() * 0.72, 3),
+  delay: rounded(random() * 5, 2),
+  twinkles: index % 13 === 4,
+  twinkleDuration: rounded(5.8 + (index % 5) * 0.7, 1),
+}));
+---
+
+<div
+  class="cosmic-backdrop"
+  data-cosmic-backdrop
+  data-scene={scene}
+  transition:persist="cosmic-backdrop"
+  aria-hidden="true"
+>
+  <div class="cosmic-backdrop-wash"></div>
+  <div class="cosmic-backdrop-grid"></div>
+  <svg
+    class="cosmic-backdrop-stars"
+    data-cosmic-stars
+    viewBox="0 0 1200 800"
+    preserveAspectRatio="xMidYMid slice"
+  >
+    {
+      stars.map((star) => (
+        <circle
+          class={star.twinkles ? "cosmic-star--twinkle" : undefined}
+          cx={star.x}
+          cy={star.y}
+          data-twinkle-star={star.twinkles ? "" : undefined}
+          r={star.radius}
+          style={`--cosmic-star-opacity:${star.opacity};--cosmic-star-delay:${star.delay}s;--cosmic-twinkle-duration:${star.twinkleDuration}s`}
+        />
+      ))
+    }
+  </svg>
+  <div class="cosmic-route-earth" data-cosmic-route-earth>
+    <EarthProxy />
+  </div>
+  <div class="cosmic-flight-layer" data-cosmic-flight-layer>
+    <canvas data-cosmic-flight-canvas></canvas>
+  </div>
+</div>
+
+<script>
+  import { initializeCosmicTransitions } from "@/lib/cosmic-transitions/controller";
+
+  initializeCosmicTransitions();
+</script>
+
+<style>
+  .cosmic-backdrop {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background: #07090d;
+    isolation: isolate;
+  }
+
+  .cosmic-backdrop-wash,
+  .cosmic-backdrop-grid,
+  .cosmic-backdrop-stars {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cosmic-backdrop-wash {
+    background:
+      radial-gradient(circle at 72% 36%, #1a2336 0, transparent 29%),
+      radial-gradient(circle at 28% 74%, #16241f 0, transparent 27%),
+      radial-gradient(circle at 50% 48%, #10151d 0, #07090d 68%);
+  }
+
+  .cosmic-backdrop-grid {
+    opacity: 0.16;
+    background-image:
+      linear-gradient(rgba(205, 216, 255, 0.13) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(205, 216, 255, 0.13) 1px, transparent 1px);
+    background-size: 12.5vw 12.5vw;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 3%,
+      black 26%,
+      black 85%,
+      transparent
+    );
+  }
+
+  .cosmic-backdrop-stars {
+    opacity: 0.72;
+    transform: scale(1);
+    transform-origin: center;
+    transition:
+      opacity 700ms ease,
+      transform 900ms var(--ease-out-expo);
+    will-change: opacity, transform;
+  }
+
+  .cosmic-backdrop[data-scene="travel"] .cosmic-backdrop-stars {
+    opacity: 0.52;
+    transform: scale(0.96);
+  }
+
+  .cosmic-backdrop[data-scene="projects"] .cosmic-backdrop-stars {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+
+  .cosmic-backdrop-stars circle {
+    fill: #f6f0df;
+    opacity: var(--cosmic-star-opacity);
+    animation: cosmic-star-pulse 4.8s var(--cosmic-star-delay) ease-in-out
+      infinite alternate;
+  }
+
+  .cosmic-backdrop[data-scene="home"]
+    .cosmic-backdrop-stars
+    .cosmic-star--twinkle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation-name: cosmic-star-twinkle;
+    animation-duration: var(--cosmic-twinkle-duration);
+    animation-delay: calc(var(--cosmic-star-delay) * -1);
+    animation-direction: normal;
+  }
+
+  .cosmic-route-earth,
+  .cosmic-flight-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: center;
+    will-change: opacity, transform;
+  }
+
+  .cosmic-route-earth :global(.cosmic-earth-glow) {
+    filter: none;
+  }
+
+  .cosmic-route-earth {
+    width: 1px;
+    height: 1px;
+  }
+
+  .cosmic-route-earth[data-visible="true"],
+  .cosmic-flight-layer[data-visible="true"] {
+    opacity: 1;
+  }
+
+  .cosmic-flight-layer canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  @keyframes cosmic-star-pulse {
+    to {
+      opacity: calc(var(--cosmic-star-opacity) * 0.48);
+    }
+  }
+
+  @keyframes cosmic-star-twinkle {
+    0%,
+    70%,
+    100% {
+      opacity: calc(var(--cosmic-star-opacity) * 0.48);
+      transform: scale(1);
+    }
+
+    78% {
+      opacity: 1;
+      transform: scale(1.85);
+    }
+
+    86% {
+      opacity: calc(var(--cosmic-star-opacity) * 0.72);
+      transform: scale(1.08);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .cosmic-backdrop-grid {
+      background-size: 25vw 25vw;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cosmic-backdrop-stars circle {
+      animation: none;
+    }
+
+    .cosmic-backdrop[data-scene="home"]
+      .cosmic-backdrop-stars
+      .cosmic-star--twinkle {
+      animation: none;
+    }
+  }
+</style>

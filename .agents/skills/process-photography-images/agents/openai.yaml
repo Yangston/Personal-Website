@@ -1,0 +1,4 @@
+interface:
+  display_name: "Process Photography Images"
+  short_description: "Publish and audit responsive photography assets"
+  default_prompt: "Use $process-photography-images to process and validate new photography archive images."

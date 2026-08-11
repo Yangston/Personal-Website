@@ -1,20 +1,60 @@
 ---
 import type { CollectionEntry } from "astro:content";
-interface Props { entry: CollectionEntry<"projects">; index: number; }
+interface Props {
+  entry: CollectionEntry<"projects">;
+  index: number;
+}
 const { entry, index } = Astro.props;
 const { title, year, summary, stack, cover, status, draft } = entry.data;
 ---
+
 <article class="group border-t border-ink py-6 md:py-10">
-  <a class="grid gap-6 md:grid-cols-12 md:items-center" href={`/projects/${entry.id}`}>
-    <div class="flex items-start gap-3 md:col-span-2"><span class="text-xs font-bold text-cobalt">{String(index + 1).padStart(2, "0")}</span><span class="eyebrow">{year}</span></div>
-    <div class="md:col-span-4">
-      <div class="flex flex-wrap items-center gap-3"><h2 class="font-display text-5xl leading-none tracking-[-.05em] md:text-7xl">{title}</h2>{draft && <span class="bg-signal px-2 py-1 text-[10px] font-bold uppercase">Draft</span>}</div>
-      <p class="mt-3 max-w-lg text-sm leading-relaxed text-ink/70 md:text-base">{summary}</p>
-      <p class="mt-4 text-xs font-bold uppercase tracking-wider">{status} · {stack.join(" / ")}</p>
+  <a
+    class="grid gap-6 md:grid-cols-12 md:items-center"
+    href={`/projects/${entry.id}`}
+  >
+    <div class="flex items-start gap-3 md:col-span-2">
+      <span class="text-xs font-bold text-cobalt"
+        >{String(index + 1).padStart(2, "0")}</span
+      ><span class="eyebrow">{year}</span>
     </div>
-    <div class="relative aspect-[16/10] overflow-hidden bg-ink md:col-span-5 md:col-start-8">
-      <img src={cover.src} width={cover.width} height={cover.height} alt={cover.alt} loading="lazy" class="h-full w-full object-cover transition duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105 group-hover:saturate-150" />
-      <span aria-hidden="true" class="absolute bottom-3 right-3 grid size-12 rounded-full bg-paper text-2xl transition-transform group-hover:-rotate-45">↗</span>
+    <div class="md:col-span-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <h2
+          class="font-display text-5xl leading-none tracking-[-.05em] md:text-7xl"
+        >
+          {title}
+        </h2>{
+          draft && (
+            <span class="bg-signal px-2 py-1 text-[10px] font-bold uppercase">
+              Draft
+            </span>
+          )
+        }
+      </div>
+      <p class="mt-3 max-w-lg text-sm leading-relaxed text-ink/70 md:text-base">
+        {summary}
+      </p>
+      <p class="mt-4 text-xs font-bold uppercase tracking-wider">
+        {status} · {stack.join(" / ")}
+      </p>
+    </div>
+    <div
+      class="relative aspect-[16/10] overflow-hidden bg-ink md:col-span-5 md:col-start-8"
+    >
+      <img
+        src={cover.src}
+        width={cover.width}
+        height={cover.height}
+        alt={cover.alt}
+        loading="lazy"
+        class="h-full w-full object-cover transition duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105 group-hover:saturate-150"
+      />
+      <span
+        aria-hidden="true"
+        class="absolute bottom-3 right-3 grid size-12 rounded-full bg-paper text-2xl transition-transform group-hover:-rotate-45"
+        >↗</span
+      >
     </div>
   </a>
 </article>

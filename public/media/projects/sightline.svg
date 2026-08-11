@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Sightline spatial photography atlas</title>
+  <desc id="desc">Travel photographs orbit an illuminated city map as a sightline connects the image archive to a three-dimensional scene.</desc>
+  <defs>
+    <radialGradient id="space" cx="66%" cy="45%" r="76%">
+      <stop offset="0" stop-color="#24333b"/>
+      <stop offset=".48" stop-color="#111b1d"/>
+      <stop offset="1" stop-color="#07090d"/>
+    </radialGradient>
+    <linearGradient id="terrain" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8da7ff" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#c4d37b" stop-opacity=".04"/>
+    </linearGradient>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0H0V72" fill="none" stroke="#d7e1ff" stroke-opacity=".065"/>
+    </pattern>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="photo-a"><rect x="0" y="0" width="268" height="190" rx="8"/></clipPath>
+    <clipPath id="photo-b"><rect x="0" y="0" width="228" height="162" rx="8"/></clipPath>
+  </defs>
+  <rect width="1600" height="900" fill="url(#space)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <g font-family="JetBrains Mono, monospace" font-size="18" letter-spacing="4">
+    <text x="90" y="88" fill="#ff7656">SIGHTLINE / SPATIAL PHOTO ATLAS</text>
+    <text x="1212" y="88" fill="#c4d37b">2D &#8596; 3D</text>
+  </g>
+  <g transform="translate(724 130)">
+    <ellipse cx="376" cy="328" rx="360" ry="260" fill="url(#terrain)" stroke="#f0eadc" stroke-opacity=".18" stroke-width="2"/>
+    <g fill="none" stroke="#8da7ff" stroke-opacity=".38" stroke-width="2">
+      <path d="M40 320C170 196 270 188 380 276s214 82 330-48"/>
+      <path d="M74 424c122-84 218-82 300-18s190 56 306-26"/>
+      <path d="M178 112c30 136 90 220 180 296s174 106 270 106"/>
+      <path d="M316 80c-6 130 28 226 104 318s136 126 218 158"/>
+    </g>
+    <g fill="#10191b" stroke="#c4d37b" stroke-opacity=".65">
+      <path d="m122 338 74-58 58 26-16 112-90 30Z"/>
+      <path d="m270 226 112-54 86 66-32 92-118 18Z"/>
+      <path d="m454 352 80-86 112 36 26 104-118 76Z"/>
+      <path d="m304 430 100-58 74 74-46 102-116-16Z"/>
+    </g>
+    <g fill="#ff7656" filter="url(#glow)">
+      <circle cx="204" cy="354" r="8"/><circle cx="384" cy="252" r="8"/><circle cx="552" cy="378" r="8"/><circle cx="396" cy="466" r="8"/>
+    </g>
+    <g fill="none" stroke="#ff7656" stroke-width="3" stroke-dasharray="10 10">
+      <path d="M204 354 6 232"/><path d="m384 252 96-220"/><path d="m552 378 190-118"/>
+    </g>
+  </g>
+  <g transform="translate(88 190)">
+    <g clip-path="url(#photo-a)">
+      <rect width="268" height="190" fill="#182729"/>
+      <path d="M0 148 64 76l48 38 58-92 98 126v42H0Z" fill="#8da7ff" fill-opacity=".34"/>
+      <path d="M0 164 72 112l56 36 56-62 84 76v28H0Z" fill="#c4d37b" fill-opacity=".44"/>
+      <circle cx="212" cy="45" r="24" fill="#ff7656"/>
+    </g>
+    <rect width="268" height="190" rx="8" fill="none" stroke="#f0eadc" stroke-opacity=".7" stroke-width="3"/>
+    <text x="16" y="220" font-family="JetBrains Mono, monospace" font-size="15" letter-spacing="3" fill="#f0eadc">SAN FRANCISCO / 001</text>
+  </g>
+  <g transform="translate(310 484) rotate(-4)">
+    <g clip-path="url(#photo-b)">
+      <rect width="228" height="162" fill="#172126"/>
+      <rect x="18" y="32" width="42" height="130" fill="#8da7ff" fill-opacity=".48"/>
+      <rect x="70" y="12" width="58" height="150" fill="#f0eadc" fill-opacity=".13"/>
+      <rect x="138" y="50" width="74" height="112" fill="#c4d37b" fill-opacity=".35"/>
+      <path d="M0 126 228 78v84H0Z" fill="#ff7656" fill-opacity=".28"/>
+    </g>
+    <rect width="228" height="162" rx="8" fill="none" stroke="#f0eadc" stroke-opacity=".7" stroke-width="3"/>
+    <text x="14" y="190" font-family="JetBrains Mono, monospace" font-size="14" letter-spacing="3" fill="#f0eadc">TORONTO / 047</text>
+  </g>
+  <path d="M354 286C502 284 612 316 764 362" fill="none" stroke="#ff7656" stroke-width="3" stroke-dasharray="12 12" filter="url(#glow)"/>
+  <g font-family="Space Grotesk, sans-serif" fill="#f0eadc">
+    <text x="90" y="756" font-size="78" font-weight="600" letter-spacing="-4">FOLLOW THE IMAGE.</text>
+    <text x="90" y="830" font-size="78" font-style="italic" fill="#c4d37b" letter-spacing="-4">ENTER THE PLACE.</text>
+  </g>
+</svg>

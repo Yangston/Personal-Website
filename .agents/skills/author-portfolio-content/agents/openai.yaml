@@ -1,0 +1,4 @@
+interface:
+  display_name: "Author Portfolio Content"
+  short_description: "Create schema-valid portfolio content safely"
+  default_prompt: "Use $author-portfolio-content to add or update portfolio content safely."

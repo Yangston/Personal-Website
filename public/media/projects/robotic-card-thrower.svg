@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Poker Bot playing-card dealer</title>
+  <desc id="desc">A rotating mechanical launcher throws a sequence of cards along illuminated trajectories.</desc>
+  <defs>
+    <radialGradient id="space" cx="52%" cy="54%" r="72%">
+      <stop offset="0" stop-color="#273228"/>
+      <stop offset=".45" stop-color="#111b18"/>
+      <stop offset="1" stop-color="#07090d"/>
+    </radialGradient>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" fill="none" stroke="#d7e1ff" stroke-opacity=".07"/>
+    </pattern>
+    <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#space)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <text x="90" y="88" font-family="JetBrains Mono, monospace" font-size="19" letter-spacing="4" fill="#ff7656">POKER BOT / TABLETOP DEALER</text>
+  <g fill="none" stroke="#ff7656" stroke-width="4" stroke-dasharray="13 13" filter="url(#glow)">
+    <path d="M800 560Q488 114 156 334"/><path d="M800 560Q1040 112 1432 244"/><path d="M800 560Q1162 474 1450 676"/>
+  </g>
+  <g transform="translate(800 590)">
+    <ellipse rx="268" ry="90" fill="#07090d" stroke="#f0eadc" stroke-opacity=".36" stroke-width="3"/>
+    <path d="M-182-10v112c0 43 81 78 182 78s182-35 182-78V-10" fill="#17221e" stroke="#c4d37b" stroke-width="3"/>
+    <ellipse rx="182" ry="62" fill="#202d27" stroke="#c4d37b" stroke-width="3"/>
+    <path d="M-106-48v-142h212v142" fill="#ff7656" fill-opacity=".12" stroke="#ff7656" stroke-width="3"/>
+    <rect x="-135" y="-246" width="270" height="74" rx="12" fill="#111713" stroke="#f0eadc" stroke-width="3"/>
+    <circle cx="-78" cy="-209" r="46" fill="#10120f" stroke="#ff7656" stroke-width="8"/>
+    <circle cx="78" cy="-209" r="46" fill="#10120f" stroke="#c4d37b" stroke-width="8"/>
+    <path d="M-37-238h74v58h-74Z" fill="#f0eadc" fill-opacity=".1" stroke="#f0eadc"/>
+    <path d="M0-172v110" stroke="#f0eadc" stroke-opacity=".5" stroke-width="3"/>
+    <circle r="12" fill="#ff7656"/>
+  </g>
+  <g fill="#f4f0e8" stroke="#ff7656" stroke-width="3">
+    <g transform="translate(190 287) rotate(-23)"><rect x="-64" y="-92" width="128" height="184" rx="8"/><path d="M-38-54h76v108h-76Z" fill="#111713"/><circle r="20" fill="#ff7656"/></g>
+    <g transform="translate(1400 210) rotate(24)"><rect x="-64" y="-92" width="128" height="184" rx="8"/><path d="M-38-54h76v108h-76Z" fill="#111713"/><path d="M0-30 26 0 0 30-26 0Z" fill="#c4d37b"/></g>
+    <g transform="translate(1450 677) rotate(72)"><rect x="-64" y="-92" width="128" height="184" rx="8"/><path d="M-38-54h76v108h-76Z" fill="#111713"/><path d="M0-32 28 0 0 32-28 0Z" fill="#ff7656"/></g>
+  </g>
+  <g font-family="JetBrains Mono, monospace" font-size="17" fill="#f0eadc" letter-spacing="3">
+    <text x="110" y="520">01 / AIM</text><text x="1240" y="420">02 / FEED</text><text x="1190" y="808">03 / THROW</text>
+  </g>
+  <g font-family="Space Grotesk, sans-serif" fill="#f0eadc">
+    <text x="90" y="756" font-size="76" font-weight="600" letter-spacing="-4">DEAL THE TABLE.</text>
+    <text x="90" y="830" font-size="76" font-style="italic" fill="#c4d37b" letter-spacing="-4">NOT JUST THE DECK.</text>
+  </g>
+</svg>

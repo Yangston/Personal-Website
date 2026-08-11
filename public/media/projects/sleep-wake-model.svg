@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Device-agnostic sleep-wake model</title>
+  <desc id="desc">Three wrist accelerometry signals pass through a model and resolve into sleep and wake classifications.</desc>
+  <defs>
+    <radialGradient id="space" cx="68%" cy="42%" r="76%">
+      <stop offset="0" stop-color="#243044"/>
+      <stop offset=".5" stop-color="#111722"/>
+      <stop offset="1" stop-color="#07090d"/>
+    </radialGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#d7e1ff" stroke-opacity=".075"/>
+    </pattern>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#space)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <g font-family="JetBrains Mono, monospace" font-size="18" letter-spacing="4">
+    <text x="90" y="88" fill="#ff7656">TRIAXIAL WRIST ACCELEROMETRY</text>
+    <text x="1180" y="88" fill="#c4d37b">30 SECOND EPOCHS</text>
+  </g>
+  <g transform="translate(90 178)" fill="none" stroke-width="3">
+    <path d="M0 80h38l22-14 24 30 28-72 32 112 34-72 42 28 46-12 36-50 42 104 40-58 44 4 42-24 38 24 46 0" stroke="#ff7656"/>
+    <path d="M0 218h48l20-42 30 76 34-116 40 144 32-92 48 18 44-38 38 96 42-72 40 24 46-32 44 34" stroke="#8da7ff"/>
+    <path d="M0 356h38l28-18 22 46 32-30 36 12 42-72 36 128 40-82 42 26 36-14 44-62 38 120 44-56 48 2" stroke="#c4d37b"/>
+    <g fill="#f0eadc" stroke="none" font-family="JetBrains Mono, monospace" font-size="17"><text x="0" y="42">X</text><text x="0" y="180">Y</text><text x="0" y="318">Z</text></g>
+  </g>
+  <g transform="translate(776 214)">
+    <circle cx="236" cy="236" r="202" fill="#101620" stroke="#f0eadc" stroke-opacity=".2" stroke-width="2"/>
+    <circle cx="236" cy="236" r="154" fill="none" stroke="#8da7ff" stroke-opacity=".45" stroke-width="2" stroke-dasharray="4 12"/>
+    <circle cx="236" cy="236" r="108" fill="#8da7ff" fill-opacity=".1" stroke="#8da7ff" stroke-width="3" filter="url(#glow)"/>
+    <path d="M190 238c0-58 47-105 105-105 20 0 38 5 54 15-20-43-64-73-115-73-70 0-127 57-127 127s57 127 127 127c51 0 95-30 115-73-16 10-34 15-54 15-58 0-105-47-105-105Z" fill="#c4d37b"/>
+    <path d="M236 34v404M34 236h404" stroke="#f0eadc" stroke-opacity=".18"/>
+  </g>
+  <path d="M604 258h166M604 396h166M604 534h166" stroke="#f0eadc" stroke-opacity=".4" stroke-width="2" stroke-dasharray="8 8"/>
+  <g transform="translate(1270 212)" font-family="JetBrains Mono, monospace">
+    <rect width="238" height="126" rx="5" fill="#ff7656" fill-opacity=".12" stroke="#ff7656"/>
+    <text x="26" y="46" font-size="16" letter-spacing="3" fill="#ff7656">WAKE</text><text x="26" y="94" font-size="42" fill="#f0eadc">0.78</text>
+    <rect y="154" width="238" height="126" rx="5" fill="#8da7ff" fill-opacity=".12" stroke="#8da7ff"/>
+    <text x="26" y="200" font-size="16" letter-spacing="3" fill="#8da7ff">F1 SCORE</text><text x="26" y="248" font-size="42" fill="#f0eadc">0.86</text>
+    <rect y="308" width="238" height="126" rx="5" fill="#c4d37b" fill-opacity=".12" stroke="#c4d37b"/>
+    <text x="26" y="354" font-size="16" letter-spacing="3" fill="#c4d37b">SLEEP</text><text x="26" y="402" font-size="42" fill="#f0eadc">0.87</text>
+  </g>
+  <g font-family="Space Grotesk, sans-serif" fill="#f0eadc">
+    <text x="90" y="752" font-size="78" font-weight="600" letter-spacing="-4">ONE MODEL.</text>
+    <text x="90" y="826" font-size="78" font-style="italic" fill="#8da7ff" letter-spacing="-4">THREE DEVICES.</text>
+  </g>
+</svg>

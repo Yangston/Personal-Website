@@ -1,0 +1,197 @@
+---
+import type { GalleryCity } from "@/lib/photography-catalog";
+import {
+  countrySilhouettePath,
+  countryTransitionPath,
+} from "@/lib/photography-atlas/server";
+import { placeCountryCallouts } from "@/lib/photography-atlas/data";
+
+type ManifestPhoto = {
+  id: string;
+  region: string;
+  alt: string;
+  width: number;
+  height: number;
+  variants: { width: number; src: string }[];
+};
+
+interface Props {
+  country: string;
+  countryName: string;
+  description: string;
+  year: number;
+  frameCount: number;
+  cities: GalleryCity[];
+  media: ManifestPhoto[];
+}
+
+const { country, countryName, description, year, frameCount, cities, media } =
+  Astro.props;
+const width = 1120;
+const height = 720;
+const silhouette = countrySilhouettePath(country, width, height);
+const transitionPath = countryTransitionPath(country, width, height);
+const seeds = cities.map((city) => {
+  const marker = silhouette.project(
+    city.center.longitude,
+    city.center.latitude,
+  ) ?? [width / 2, height / 2];
+  return {
+    id: city.id,
+    markerX: marker[0],
+    markerY: marker[1],
+    width: city.samplePhotoIds.length > 1 ? 284 : 184,
+    height: 150,
+  };
+});
+const placements = new Map(
+  placeCountryCallouts(seeds, width, height).map((item) => [item.id, item]),
+);
+const scenes = cities.map((city) => ({
+  city,
+  photos: media.filter((photo) => photo.region === city.region),
+  samples: city.samplePhotoIds.flatMap((id) => {
+    const photo = media.find((item) => item.id === id);
+    return photo ? [photo] : [];
+  }),
+  marker: silhouette.project(city.center.longitude, city.center.latitude) ?? [
+    width / 2,
+    height / 2,
+  ],
+  callout: placements.get(city.id)!,
+}));
+---
+
+<section
+  class="country-map-hero"
+  aria-labelledby="country-title"
+  data-country-map-hero
+>
+  {
+    scenes.map(({ city }) => (
+      <span class="country-map-deep-link-anchor" id={`city-${city.id}`} />
+    ))
+  }
+  <div class="country-map-intro">
+    <p class="country-kicker">
+      <span>{year}</span><span>{frameCount} frames</span>
+    </p>
+    <header class="country-map-title-block">
+      <p class="eyebrow">Travel archive</p>
+      <h1 id="country-title">{countryName}</h1>
+    </header>
+    <p class="country-map-summary">{description}</p>
+  </div>
+  <div class="country-map-stage">
+    <svg
+      class="country-silhouette"
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-labelledby="country-silhouette-title country-silhouette-description"
+    >
+      <title id="country-silhouette-title">
+        Visited cities in {countryName}
+      </title>
+      <desc id="country-silhouette-description"
+        >A silhouette map with sample photographs arranged around each visited
+        city.</desc
+      >
+      <path class="country-silhouette-land" d={silhouette.path}></path>
+      {
+        scenes.map(({ city, marker, samples, callout }) => (
+          <a
+            href={`/photography/${country}/${city.id}`}
+            class="country-map-callout"
+            data-country-city={city.id}
+            aria-label={`Open ${city.name} city archive`}
+          >
+            <path
+              class="country-map-leader"
+              d={`M ${callout.left + callout.width / 2} ${callout.top + callout.height / 2} Q ${(callout.left + callout.width / 2 + marker[0]) / 2} ${(callout.top + callout.height / 2 + marker[1]) / 2 - 18} ${marker[0]} ${marker[1]}`}
+            />
+            {samples.map((sample, index) => {
+              const variant =
+                sample.variants.find((item) => item.width === 480) ??
+                sample.variants[0];
+              return (
+                <image
+                  href={variant.src}
+                  x={callout.left + index * 104}
+                  y={callout.top + 28}
+                  width="176"
+                  height="96"
+                  preserveAspectRatio="xMidYMid slice"
+                />
+              );
+            })}
+            <rect
+              class="country-map-photo-frame"
+              x={callout.left - 8}
+              y={callout.top + 20}
+              width={callout.width + 16}
+              height="112"
+              rx="10"
+            />
+            <text
+              class="country-map-city-name"
+              x={callout.left + callout.width / 2}
+              y={callout.top + 15}
+              text-anchor="middle"
+            >
+              {city.name}
+            </text>
+            <circle
+              class="country-map-marker-ring"
+              cx={marker[0]}
+              cy={marker[1]}
+              r="13"
+            />
+            <circle
+              class="country-map-marker"
+              cx={marker[0]}
+              cy={marker[1]}
+              r="5"
+            />
+          </a>
+        ))
+      }
+    </svg>
+    <svg
+      class="country-handoff-map"
+      viewBox={`0 0 ${width} ${height}`}
+      aria-hidden="true"
+      data-country-handoff
+      ><path class="country-handoff-shape" d={transitionPath}></path></svg
+    >
+  </div>
+</section>
+
+<section
+  class="country-city-directory"
+  aria-labelledby="country-directory-title"
+>
+  <header>
+    <p class="eyebrow">Field notes / routes</p><h2 id="country-directory-title">
+      Where the frames <em>landed.</em>
+    </h2>
+  </header>
+  <div class="country-city-grid">
+    {
+      scenes.map(({ city, photos }, index) => (
+        <article id={`city-card-${city.id}`}>
+          <a
+            href={`/photography/${country}/${city.id}`}
+            data-astro-prefetch="hover"
+          >
+            <p>
+              0{index + 1} / {photos.length} frames
+            </p>
+            <h3>{city.name}</h3>
+            <p>{city.description}</p>
+            <span>Open city gallery →</span>
+          </a>
+        </article>
+      ))
+    }
+  </div>
+</section>

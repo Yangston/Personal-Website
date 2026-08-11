@@ -1,0 +1,43 @@
+---
+title: "Sightline"
+year: 2026
+status: "Live interactive showcase"
+role: "Creator, product designer, and frontend engineer"
+summary: "An interactive photography atlas that moves between a curated 2D archive and place-based 3D scenes, turning travel photographs into a spatial narrative."
+stack: ["Astro", "TypeScript", "CesiumJS", "Google Maps 3D Tiles"]
+cover:
+  src: "/media/projects/sightline.svg"
+  width: 1600
+  height: 900
+  alt: "Sightline interface connecting travel photographs to an illuminated three-dimensional city map"
+draft: false
+featured: true
+links:
+  repository: "https://github.com/Yangston/Sightline"
+  live: "https://sightline.stoneyang.ca"
+demo:
+  type: "external"
+  url: "https://sightline.stoneyang.ca"
+---
+
+## Photography with a sense of place
+
+Sightline is an independent interactive showcase for exploring my travel photography through geography. The experience begins as a fast, curated image archive, then lets each supported city open into a three-dimensional scene where photographs can be read in relation to the streets, terrain, and skyline around them.
+
+The project is deliberately separate from this portfolio's gallery. The portfolio remains the quiet editorial home for finished photographs; Sightline is the spatial experiment, with its own visual identity, release cadence, and public dataset.
+
+## Moving between two dimensions and three
+
+The central interaction is a reversible transition between an image-led city view and an immersive globe. Camera movement, selected photographs, URL state, and interface controls stay coordinated so the shift feels like another way of reading the same place rather than a jump into a separate tool.
+
+The 2D experience remains useful on its own. Static routes, image-first browsing, and direct links keep the work accessible without requiring WebGL, while the enhanced viewer adds terrain, buildings, and guided viewpoints when the browser supports them.
+
+## A reviewed public snapshot
+
+Sightline publishes an explicit snapshot of the photography data rather than reaching into the portfolio at runtime. Public descriptions and date-only records travel with responsive images; source GPS, camera geometry, calibration evidence, and private archival material do not. Validation checks keep that boundary visible and make every release reproducible.
+
+The current showcase spans 149 photographs across six city experiences, with a focused set of guided views and image-only fallbacks for scenes that do not meet the release threshold.
+
+## Built as a distinct instrument
+
+Astro provides the static narrative and city routes, while CesiumJS and Google Photorealistic 3D Tiles power the optional spatial layer. The result is less a conventional map than an instrument for revisiting a place: select a photograph, enter its wider environment, and return to the archive without losing the thread. [Explore Sightline](https://sightline.stoneyang.ca).

@@ -8,59 +8,46 @@ const themeSchema = z.object({
   accent: z.string().default("#3157ff"),
   rhythm: z.enum(["tight", "balanced", "expansive"]).default("balanced"),
   grain: z.number().min(0).max(1).default(0.25),
-  motion: z.enum(["quiet", "spring", "kinetic"]).default("spring")
-});
-
-const imageSchema = z.object({
-  type: z.literal("image"),
-  src: z.string().min(1),
-  width: z.number().int().positive(),
-  height: z.number().int().positive(),
-  alt: z.string().min(1),
-  caption: z.string().optional(),
-  layout: z.enum(["full", "wide", "portrait", "inset", "pair"]).default("wide")
-});
-
-const videoSchema = z.object({
-  type: z.literal("video"),
-  src: z.string().min(1),
-  width: z.number().int().positive(),
-  height: z.number().int().positive(),
-  alt: z.string().min(1),
-  caption: z.string().optional(),
-  poster: z.string().optional(),
-  layout: z.enum(["full", "wide", "portrait", "inset", "pair"]).default("wide")
+  motion: z.enum(["quiet", "spring", "kinetic"]).default("spring"),
 });
 
 const coverSchema = z.object({
   src: z.string().min(1),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
-  alt: z.string().min(1)
+  alt: z.string().min(1),
 });
 
 const photography = defineCollection({
   loader: glob({ base: "./src/content/photography", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    location: z.string(),
+    name: z.string(),
+    isoCode: z.string().length(2),
+    coordinates: z.object({ latitude: z.number(), longitude: z.number() }),
+    dateRange: z.object({ start: z.coerce.date(), end: z.coerce.date() }),
     description: z.string(),
-    draft: z.boolean().default(true),
+    draft: z.boolean().default(false),
     featured: z.boolean().default(false),
-    presentation: z.enum(["editorial-grid", "film-strip", "kinetic-collage", "custom"]),
-    visualModule: z.string().optional(),
     theme: themeSchema,
-    cover: coverSchema,
-    media: z.array(z.discriminatedUnion("type", [imageSchema, videoSchema])).default([])
-  })
+    coverId: z.string(),
+    regions: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        label: z.string(),
+        coordinates: z
+          .object({ latitude: z.number(), longitude: z.number() })
+          .optional(),
+      }),
+    ),
+  }),
 });
 
 const demoSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("native"), id: z.string() }),
   z.object({ type: z.literal("iframe"), url: z.url(), title: z.string() }),
   z.object({ type: z.literal("external"), url: z.url() }),
-  z.object({ type: z.literal("none") })
+  z.object({ type: z.literal("none") }),
 ]);
 
 const projects = defineCollection({
@@ -75,21 +62,14 @@ const projects = defineCollection({
     cover: coverSchema,
     draft: z.boolean().default(true),
     featured: z.boolean().default(false),
-    links: z.object({
-      repository: z.url().optional(),
-      live: z.url().optional()
-    }).default({}),
-    demo: demoSchema.default({ type: "none" })
-  })
+    links: z
+      .object({
+        repository: z.url().optional(),
+        live: z.url().optional(),
+      })
+      .default({}),
+    demo: demoSchema.default({ type: "none" }),
+  }),
 });
 
-const profile = defineCollection({
-  loader: glob({ base: "./src/content/profile", pattern: "**/*.{md,mdx}" }),
-  schema: z.object({
-    title: z.string(),
-    draft: z.boolean().default(true),
-    summary: z.string()
-  })
-});
-
-export const collections = { photography, projects, profile };
+export const collections = { photography, projects };

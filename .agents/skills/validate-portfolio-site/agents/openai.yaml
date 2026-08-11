@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validate Portfolio Site"
+  short_description: "Run risk-based portfolio validation checks"
+  default_prompt: "Use $validate-portfolio-site to select and run the right checks for this change."

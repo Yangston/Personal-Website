@@ -1,0 +1,167 @@
+---
+import type { AtlasCountrySummary } from "@/lib/photography-atlas/data";
+import { hongKongAtlasFeature } from "@/lib/photography-atlas/hong-kong";
+
+interface Props {
+  countries: AtlasCountrySummary[];
+}
+
+const { countries } = Astro.props;
+const hongKong = hongKongAtlasFeature;
+---
+
+<section class="atlas-stage" data-atlas-launcher aria-label="Travel atlas">
+  <canvas
+    class="atlas-canvas"
+    data-atlas-canvas
+    aria-label="Rotating globe with visited countries and cities"></canvas>
+  <svg class="atlas-overlay" data-atlas-overlay aria-hidden="true">
+    <g class="atlas-country-leaders">
+      {
+        countries.map((country) => (
+          <polyline
+            data-atlas-leader={country.slug}
+            pathLength="1"
+            points="0,0 0,0 0,0"
+          />
+        ))
+      }
+    </g>
+    <path class="atlas-handoff-shape" data-atlas-handoff-shape></path>
+  </svg>
+  <nav class="atlas-country-labels" aria-label="Published countries">
+    {
+      countries.map((country, index) => (
+        <a
+          href={`/photography/${country.slug}`}
+          data-astro-reload
+          data-atlas-country={country.slug}
+          aria-label={`${country.name}, ${country.count} frames`}
+        >
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <strong style={`--atlas-character-count:${country.name.length}`}>
+            <span data-atlas-country-name data-text={country.name}>
+              {country.name}
+            </span>
+          </strong>
+          <small>{country.count} frames</small>
+        </a>
+      ))
+    }
+  </nav>
+  <nav class="atlas-city-markers" aria-label="Visited cities">
+    {
+      countries.flatMap((country) =>
+        country.cities.map((city) => (
+          <a
+            href={`/photography/${country.slug}#city-${city.id}`}
+            data-astro-reload
+            data-atlas-city={city.id}
+            data-atlas-city-country={country.slug}
+            aria-label={`Open ${country.name} travel map at ${city.name}`}
+          >
+            <span class="atlas-city-marker-glyph" aria-hidden="true" />
+            <span class="atlas-city-tooltip">
+              {city.name}
+              <small>{country.isoCode}</small>
+            </span>
+          </a>
+        )),
+      )
+    }
+  </nav>
+  <aside
+    class="atlas-country-preview"
+    data-atlas-country-preview
+    aria-label="Country preview"
+    aria-live="polite"
+  >
+    {
+      countries.map((country) => (
+        <article
+          data-atlas-preview-card={country.slug}
+          data-active="false"
+          aria-hidden="true"
+        >
+          <div class="atlas-preview-copy">
+            <p class="eyebrow">
+              {country.isoCode} / {String(country.count).padStart(3, "0")}{" "}
+              frames
+            </p>
+            <h2>{country.name}</h2>
+            <p>
+              Field notes from{" "}
+              {country.cities.map((city) => city.name).join(", ")}.
+            </p>
+          </div>
+          <div class="atlas-preview-images" aria-hidden="true">
+            {country.previewImages.map((image) => (
+              <img
+                src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                data-atlas-preview-src={image.src}
+                width={image.width}
+                height={image.height}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            ))}
+          </div>
+        </article>
+      ))
+    }
+  </aside>
+  <p class="atlas-status" data-atlas-status aria-live="polite">
+    Preparing the atlas…
+  </p>
+  <nav
+    class="atlas-fallback"
+    aria-label="Travel countries"
+    data-atlas-fallback
+    hidden
+  >
+    <p>The interactive atlas is unavailable. Continue with a country:</p>
+    <ul>
+      {
+        countries.map((country) => (
+          <li>
+            <a href={`/photography/${country.slug}`} data-astro-reload>
+              {country.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <noscript>
+    <nav
+      class="atlas-fallback atlas-fallback-noscript"
+      aria-label="Travel countries without JavaScript"
+    >
+      <p>Choose a country to explore the archive:</p>
+      <ul>
+        {
+          countries.map((country) => (
+            <li>
+              <a href={`/photography/${country.slug}`} data-astro-reload>
+                {country.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </noscript>
+  <script
+    is:inline
+    type="application/json"
+    data-atlas-countries
+    set:html={JSON.stringify(countries)}
+  />
+  <script
+    is:inline
+    type="application/json"
+    data-atlas-hong-kong
+    set:html={JSON.stringify(hongKong)}
+  />
+</section>

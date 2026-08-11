@@ -1,0 +1,251 @@
+---
+import EarthProxy from "./EarthProxy.astro";
+import { site } from "@/config/site";
+---
+
+<section class="orbital-home" data-orbital-home aria-labelledby="orbital-title">
+  <div
+    class="orbital-earth"
+    data-home-earth
+    role="img"
+    aria-label={site.location}
+  >
+    <EarthProxy />
+  </div>
+
+  <header class="orbital-intro" data-home-foreground>
+    <p class="eyebrow">Orbital observatory / 000</p>
+    <h1 id="orbital-title">Stone <em>Yang.</em></h1>
+    <p>{site.introduction}</p>
+  </header>
+
+  <nav
+    class="orbital-destinations"
+    aria-label="Explore the portfolio"
+    data-home-foreground
+  >
+    <a href="/photography">
+      <span class="orbital-destination-index">01 / Earth</span>
+      <strong>Travel</strong>
+      <small>Field notes from the world below</small>
+      <span aria-hidden="true">↘</span>
+    </a>
+    <a href="/projects">
+      <span class="orbital-destination-index">02 / Deep space</span>
+      <strong>Projects</strong>
+      <small>Engineering work and experiments</small>
+      <span aria-hidden="true">↗</span>
+    </a>
+  </nav>
+
+  <footer class="orbital-contact" data-home-foreground>
+    <span>Engineer · photographer · curious builder</span>
+    <span>
+      <a href={`mailto:${site.email}`}>Signal me</a>
+      <a href={site.resume}>Résumé</a>
+    </span>
+  </footer>
+</section>
+
+<style>
+  .orbital-home {
+    position: relative;
+    height: 100svh;
+    min-height: 42rem;
+    overflow: hidden;
+    isolation: isolate;
+    color: #f0eadc;
+    background: transparent;
+  }
+
+  .orbital-earth {
+    position: absolute;
+    z-index: 0;
+    top: 137%;
+    left: 50%;
+    width: max(120vw, 120vh);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    transform-origin: center;
+    will-change: opacity, transform;
+  }
+
+  .orbital-intro {
+    position: absolute;
+    z-index: 2;
+    top: clamp(7rem, 16vh, 10rem);
+    left: var(--page-gutter);
+    width: min(39rem, 48vw);
+  }
+
+  .orbital-intro .eyebrow {
+    color: #ff7656;
+  }
+
+  .orbital-intro h1 {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 9vw, 9rem);
+    font-weight: 520;
+    line-height: 0.76;
+    letter-spacing: -0.07em;
+  }
+
+  .orbital-intro h1 em {
+    color: #c4d37b;
+    font-weight: inherit;
+  }
+
+  .orbital-intro > p:last-child {
+    width: min(28rem, 100%);
+    margin: 1.5rem 0 0;
+    color: rgba(240, 234, 220, 0.68);
+    font-size: clamp(0.78rem, 1.1vw, 0.95rem);
+    line-height: 1.6;
+  }
+
+  .orbital-destinations {
+    position: absolute;
+    z-index: 3;
+    top: clamp(8.5rem, 21vh, 13rem);
+    right: var(--page-gutter);
+    display: grid;
+    width: min(28rem, 36vw);
+  }
+
+  .orbital-destinations a {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 1rem;
+    padding: 1.2rem 0.2rem 1.35rem;
+    border-top: 1px solid rgba(240, 234, 220, 0.34);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      color 200ms ease,
+      padding 420ms var(--ease-out-expo);
+  }
+
+  .orbital-destinations a:last-child {
+    border-bottom: 1px solid rgba(240, 234, 220, 0.34);
+  }
+
+  .orbital-destination-index {
+    grid-column: 1 / -1;
+    color: #ff7656;
+    font: 0.58rem/1 var(--font-code);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .orbital-destinations strong {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4vw, 4.5rem);
+    font-weight: 520;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .orbital-destinations small {
+    align-self: end;
+    color: rgba(240, 234, 220, 0.58);
+    font-size: 0.62rem;
+  }
+
+  .orbital-destinations a > span:last-child {
+    grid-column: 2;
+    grid-row: 2 / 4;
+    align-self: center;
+    color: #c4d37b;
+    font-size: 1.15rem;
+    transition: transform 420ms var(--ease-out-expo);
+  }
+
+  .orbital-destinations a:is(:hover, :focus-visible) {
+    padding-inline: 0.75rem;
+    color: #c4d37b;
+  }
+
+  .orbital-destinations a:is(:hover, :focus-visible) > span:last-child {
+    transform: translate(0.25rem, -0.25rem);
+  }
+
+  .orbital-contact {
+    position: absolute;
+    z-index: 3;
+    right: var(--page-gutter);
+    bottom: 2rem;
+    left: var(--page-gutter);
+    display: flex;
+    justify-content: space-between;
+    color: rgba(240, 234, 220, 0.64);
+    font: 0.58rem/1.3 var(--font-code);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .orbital-contact > span:last-child {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .orbital-contact a {
+    color: inherit;
+    text-underline-offset: 0.25rem;
+  }
+
+  @media (max-width: 700px) {
+    .orbital-home {
+      min-height: 45rem;
+    }
+
+    .orbital-intro {
+      top: 6.5rem;
+      width: calc(100% - var(--page-gutter) * 2);
+    }
+
+    .orbital-intro h1 {
+      font-size: clamp(4rem, 20vw, 6rem);
+    }
+
+    .orbital-intro > p:last-child {
+      max-width: 21rem;
+      margin-top: 1rem;
+    }
+
+    .orbital-destinations {
+      top: auto;
+      right: var(--page-gutter);
+      bottom: 7.5rem;
+      left: var(--page-gutter);
+      width: auto;
+    }
+
+    .orbital-destinations a {
+      padding-block: 0.8rem;
+    }
+
+    .orbital-destinations strong {
+      font-size: 2.5rem;
+    }
+
+    .orbital-earth {
+      top: 130%;
+      width: max(175vw, 110vh);
+    }
+
+    .orbital-contact {
+      bottom: 1.4rem;
+    }
+
+    .orbital-contact > span:first-child {
+      display: none;
+    }
+
+    .orbital-contact > span:last-child {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

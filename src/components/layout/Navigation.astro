@@ -1,0 +1,113 @@
+---
+type Item = { readonly label: string; readonly href: string };
+
+interface Props {
+  currentPath: string;
+  items: readonly Item[];
+  overlay?: boolean;
+}
+
+const { currentPath, items, overlay = false } = Astro.props;
+---
+
+<header
+  class:list={[
+    "site-navigation sticky top-0 z-50 border-b border-ink/20 bg-paper/90 backdrop-blur-xl",
+    overlay && "site-navigation-overlay",
+  ]}
+>
+  <nav
+    aria-label="Primary"
+    class="flex h-18 items-center justify-between px-[var(--page-gutter)] md:h-22"
+  >
+    <a
+      href="/"
+      aria-label="Stone Yang, home"
+      class="font-display text-3xl font-semibold tracking-[-.08em] md:text-4xl"
+      >SY</a
+    >
+    <ul class="hidden items-center gap-8 md:flex">
+      {
+        items.map((item, index) => {
+          const active =
+            item.href === "/"
+              ? currentPath === "/"
+              : currentPath.startsWith(item.href);
+          return (
+            <li>
+              <a
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                class="group flex items-baseline gap-2 text-sm font-semibold uppercase tracking-[.12em] transition-transform hover:-translate-y-1"
+              >
+                <span class="text-[10px] text-signal">0{index + 1}</span>
+                <span
+                  class:list={[
+                    active && "underline decoration-2 underline-offset-6",
+                  ]}
+                >
+                  {item.label}
+                </span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+    <details class="mobile-navigation relative md:hidden">
+      <summary
+        class="grid size-11 cursor-pointer list-none place-items-center border border-ink"
+        aria-label="Open navigation"
+      >
+        <span aria-hidden="true" class="mobile-navigation-open text-xl">≡</span>
+        <span aria-hidden="true" class="mobile-navigation-close text-xl">×</span
+        >
+      </summary>
+      <div
+        class="absolute right-[calc(-1*var(--page-gutter))] top-[calc(100%+1.05rem)] w-screen border-b border-ink bg-cobalt px-[var(--page-gutter)] py-10 text-paper"
+      >
+        <ul class="space-y-4">
+          {
+            items.map((item, index) => (
+              <li>
+                <a
+                  class="flex items-baseline gap-4 font-display text-5xl"
+                  href={item.href}
+                >
+                  <span class="font-sans text-xs">0{index + 1}</span>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </details>
+  </nav>
+</header>
+
+<script>
+  const navigationWindow = window as Window & {
+    __portfolioNavigationInitialized?: boolean;
+  };
+  if (!navigationWindow.__portfolioNavigationInitialized) {
+    navigationWindow.__portfolioNavigationInitialized = true;
+    document.addEventListener("click", (event) => {
+      const link =
+        event.target instanceof Element
+          ? event.target.closest(".mobile-navigation a")
+          : null;
+      link
+        ?.closest<HTMLDetailsElement>(".mobile-navigation")
+        ?.removeAttribute("open");
+    });
+    document.addEventListener("keydown", (event) => {
+      const details = document.querySelector<HTMLDetailsElement>(
+        ".mobile-navigation[open]",
+      );
+      if (event.key !== "Escape" || !details?.open) return;
+      details.removeAttribute("open");
+      details.querySelector<HTMLElement>("summary")?.focus();
+    });
+  }
+</script>

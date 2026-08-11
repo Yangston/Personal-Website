@@ -3,33 +3,65 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "overrides": {
+    "path-to-regexp": "6.3.0"
+  },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "photos": "node scripts/photography/import.mjs",
+    "photos:rebuild": "node scripts/photography/archive.mjs",
+    "photos:check": "node scripts/photography/archive.mjs --check",
+    "photos:check:generated": "node scripts/photography/archive.mjs --check-generated",
+    "build": "npm run photos:check:generated && astro check && astro build && npm run check:artifacts",
+    "check:artifacts": "node scripts/check-artifact-boundaries.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "playwright test"
+    "lint": "eslint .",
+    "format": "prettier --plugin=prettier-plugin-astro --write .",
+    "format:check": "prettier --plugin=prettier-plugin-astro --check .",
+    "test:unit": "vitest run",
+    "test": "node scripts/run-playwright.mjs",
+    "release:check": "npm run photos:check:generated && npm run format:check && npm run lint && npm run test:unit && npm run build && npm test"
   },
   "dependencies": {
-    "@astrojs/mdx": "^5.0.6",
-    "@astrojs/react": "^5.0.7",
+    "@astrojs/mdx": "^7.0.3",
+    "@astrojs/react": "^6.0.1",
     "@astrojs/sitemap": "^3.7.3",
-    "@astrojs/vercel": "^10.0.8",
+    "@astrojs/vercel": "^11.0.3",
     "@fontsource-variable/fraunces": "^5.2.8",
     "@fontsource-variable/space-grotesk": "^5.2.10",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@tailwindcss/vite": "^4.3.2",
-    "astro": "^6.0.0",
+    "astro": "^7.0.9",
+    "d3-geo": "^3.1.1",
+    "exif-reader": "^2.0.3",
     "motion": "^12.27.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "tailwindcss": "^4.3.2"
+    "sharp": "^0.35.3",
+    "tailwindcss": "^4.3.2",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.6",
+    "@astrojs/check": "^0.9.9",
     "@playwright/test": "^1.57.0",
+    "@types/d3-geo": "^3.1.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@types/topojson-client": "^3.1.5",
+    "eslint": "^10.7.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "exiftool-vendored": "^36.0.0",
+    "prettier": "^3.9.5",
+    "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.9.3",
-    "vite": "^7.3.6"
+    "typescript-eslint": "^8.63.0",
+    "vite": "^8.1.4",
+    "vitest": "^4.1.10"
   }
 }

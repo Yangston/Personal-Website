@@ -1,0 +1,246 @@
+{
+  "regions": [
+    {
+      "key": "canada/elora",
+      "country": "canada",
+      "archiveCountry": "Canada",
+      "id": "elora",
+      "name": "Elora"
+    },
+    {
+      "key": "canada/toronto",
+      "country": "canada",
+      "archiveCountry": "Canada",
+      "id": "toronto",
+      "name": "Toronto"
+    },
+    {
+      "key": "china/chongqing",
+      "country": "china",
+      "archiveCountry": "China",
+      "id": "chongqing",
+      "name": "Chongqing"
+    },
+    {
+      "key": "china/guilin-yangshuo",
+      "country": "china",
+      "archiveCountry": "China",
+      "id": "guilin-yangshuo",
+      "name": "Guilin and Yangshuo"
+    },
+    {
+      "key": "china/zhangjiajie",
+      "country": "china",
+      "archiveCountry": "China",
+      "id": "zhangjiajie",
+      "name": "Zhangjiajie"
+    },
+    {
+      "key": "hong-kong/hong-kong",
+      "country": "hong-kong",
+      "archiveCountry": "Hong-Kong",
+      "id": "hong-kong",
+      "name": "Hong Kong"
+    },
+    {
+      "key": "taiwan/taipei-north-coast",
+      "country": "taiwan",
+      "archiveCountry": "Taiwan",
+      "id": "taipei-north-coast",
+      "name": "Taipei and Taiwan's north coast"
+    },
+    {
+      "key": "thailand/bangkok",
+      "country": "thailand",
+      "archiveCountry": "Thailand",
+      "id": "bangkok",
+      "name": "Bangkok"
+    },
+    {
+      "key": "thailand/chiang-mai",
+      "country": "thailand",
+      "archiveCountry": "Thailand",
+      "id": "chiang-mai",
+      "name": "Chiang Mai"
+    },
+    {
+      "key": "united-states/san-francisco",
+      "country": "united-states",
+      "archiveCountry": "United-States",
+      "id": "san-francisco",
+      "name": "San Francisco"
+    }
+  ],
+  "cities": [
+    {
+      "id": "san-francisco",
+      "regionKey": "united-states/san-francisco",
+      "name": "San Francisco",
+      "description": "Hills, storefronts, and coastal views photographed on foot around the city.",
+      "center": {
+        "latitude": 37.795,
+        "longitude": -122.426
+      },
+      "bounds": {
+        "west": -122.46,
+        "south": 37.77,
+        "east": -122.39,
+        "north": 37.82
+      },
+      "samplePhotoIds": ["img-7492", "img-7526"]
+    },
+    {
+      "id": "taipei-north-coast",
+      "regionKey": "taiwan/taipei-north-coast",
+      "name": "Taipei & North Coast",
+      "description": "A broad scene spanning Taipei streets, mountain settlements, coast, and grassland.",
+      "center": {
+        "latitude": 25.09,
+        "longitude": 121.62
+      },
+      "bounds": {
+        "west": 121.47,
+        "south": 24.98,
+        "east": 121.88,
+        "north": 25.25
+      },
+      "samplePhotoIds": ["img-5201", "img-5772"]
+    },
+    {
+      "id": "bangkok",
+      "regionKey": "thailand/bangkok",
+      "name": "Bangkok",
+      "description": "iPhone capture points across central Bangkok.",
+      "center": {
+        "latitude": 13.758,
+        "longitude": 100.5
+      },
+      "bounds": {
+        "west": 100.45,
+        "south": 13.71,
+        "east": 100.55,
+        "north": 13.81
+      },
+      "samplePhotoIds": ["img-6957", "img-6088"]
+    },
+    {
+      "id": "toronto",
+      "regionKey": "canada/toronto",
+      "name": "Toronto",
+      "description": "Waterfront, streetcar, downtown, and elevated city views across iPhone captures.",
+      "center": {
+        "latitude": 43.653,
+        "longitude": -79.393
+      },
+      "bounds": {
+        "west": -79.44,
+        "south": 43.62,
+        "east": -79.35,
+        "north": 43.69
+      },
+      "samplePhotoIds": ["img-7283", "img-2713"]
+    },
+    {
+      "id": "hong-kong",
+      "regionKey": "hong-kong/hong-kong",
+      "name": "Hong Kong",
+      "description": "Steep streets, market lanes, and layered urban facades across iPhone captures.",
+      "center": {
+        "latitude": 22.315,
+        "longitude": 114.165
+      },
+      "bounds": {
+        "west": 114.1,
+        "south": 22.24,
+        "east": 114.25,
+        "north": 22.36
+      },
+      "samplePhotoIds": ["img-2820", "dscf7706"]
+    },
+    {
+      "id": "chongqing",
+      "regionKey": "china/chongqing",
+      "name": "Chongqing",
+      "description": "Fujifilm poses used to exercise terrain and marker fallbacks.",
+      "center": {
+        "latitude": 29.56,
+        "longitude": 106.56
+      },
+      "bounds": {
+        "west": 106.49,
+        "south": 29.51,
+        "east": 106.62,
+        "north": 29.61
+      },
+      "samplePhotoIds": ["dscf9425", "dscf9987"]
+    },
+    {
+      "id": "elora",
+      "regionKey": "canada/elora",
+      "name": "Elora",
+      "description": "Region-level placement for Grand River photographs without per-frame GPS.",
+      "center": {
+        "latitude": 43.68,
+        "longitude": -80.43
+      },
+      "bounds": {
+        "west": -80.5,
+        "south": 43.63,
+        "east": -80.35,
+        "north": 43.75
+      },
+      "samplePhotoIds": ["img-7348"]
+    },
+    {
+      "id": "guilin-yangshuo",
+      "regionKey": "china/guilin-yangshuo",
+      "name": "Guilin & Yangshuo",
+      "description": "Region-level placement across the Li River karst landscape.",
+      "center": {
+        "latitude": 24.773,
+        "longitude": 110.496
+      },
+      "bounds": {
+        "west": 110.2,
+        "south": 24.5,
+        "east": 110.8,
+        "north": 25.5
+      },
+      "samplePhotoIds": ["dscf7904", "dscf8299"]
+    },
+    {
+      "id": "zhangjiajie",
+      "regionKey": "china/zhangjiajie",
+      "name": "Zhangjiajie",
+      "description": "Region-level placement for the Wulingyuan mountain archive.",
+      "center": {
+        "latitude": 29.117,
+        "longitude": 110.479
+      },
+      "bounds": {
+        "west": 110.3,
+        "south": 28.95,
+        "east": 110.65,
+        "north": 29.3
+      },
+      "samplePhotoIds": ["dscf8993", "dscf9052"]
+    },
+    {
+      "id": "chiang-mai",
+      "regionKey": "thailand/chiang-mai",
+      "name": "Chiang Mai",
+      "description": "Region-level placement for northern Thailand photographs.",
+      "center": {
+        "latitude": 18.79,
+        "longitude": 98.99
+      },
+      "bounds": {
+        "west": 98.85,
+        "south": 18.68,
+        "east": 99.1,
+        "north": 18.92
+      },
+      "samplePhotoIds": ["img-6403", "img-6578"]
+    }
+  ]
+}

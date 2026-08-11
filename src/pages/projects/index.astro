@@ -1,15 +1,18 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import ProjectCard from "@/components/cards/ProjectCard.astro";
+import ProjectConstellationField from "@/components/projects/ProjectConstellationField.astro";
 import { getProjects } from "@/lib/content";
+
 const projects = await getProjects();
 ---
-<BaseLayout title="Projects — Stone Yang" description="Engineering projects and interactive experiments by Stone Yang.">
-  <header class="page-grid min-h-[68svh] items-end border-b border-ink pb-10 pt-16 md:pb-16">
-    <div class="col-span-6 md:col-span-10"><p class="eyebrow mb-8 text-cobalt">Projects and experiments</p><h1 class="display-title">Working<br/><span class="ml-[8vw] italic text-signal">parts.</span></h1></div>
-    <p class="col-span-5 col-start-2 mt-10 max-w-sm text-sm leading-relaxed md:col-span-2 md:col-start-11 md:mt-0">Software, machine learning, physical systems, and demos you can touch.</p>
-  </header>
-  <section class="page-shell py-16 md:py-28">
-    {projects.length ? projects.map((entry, index) => <ProjectCard entry={entry} index={index} />) : <div class="grid min-h-[42vh] place-items-center border-y border-dashed border-ink/35 p-8 text-center"><div><p class="font-display text-5xl italic md:text-7xl">The workshop is open.</p><p class="mt-4 text-sm uppercase tracking-widest">Case studies are being rebuilt behind the curtain.</p></div></div>}
-  </section>
+
+<BaseLayout
+  title="Projects — Stone Yang"
+  description="Engineering projects and interactive experiments by Stone Yang, mapped as a field of constellations."
+  theme="dark"
+  immersive
+  immersiveScroll
+  cosmicScene="projects"
+>
+  <ProjectConstellationField projects={projects} />
 </BaseLayout>

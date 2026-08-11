@@ -1,0 +1,61 @@
+---
+import { type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CityGallery from "@/components/photography/CityGallery.astro";
+import manifest from "@/data/photography-manifest.json";
+import { getPhotography } from "@/lib/content";
+import {
+  getGalleryCitiesForCountry,
+  type GalleryCity,
+} from "@/lib/photography-catalog";
+
+export async function getStaticPaths() {
+  const entries = await getPhotography();
+  return entries.flatMap((entry) =>
+    getGalleryCitiesForCountry(entry.id).map((city) => ({
+      params: { country: entry.id, city: city.id },
+      props: {
+        entry,
+        city,
+        media: manifest.filter(
+          (photo) => photo.country === entry.id && photo.region === city.region,
+        ),
+      },
+    })),
+  );
+}
+
+interface Props {
+  entry: CollectionEntry<"photography">;
+  city: GalleryCity;
+  media: typeof manifest;
+}
+
+const { entry, city, media } = Astro.props;
+const cover =
+  media.find((photo) => city.samplePhotoIds.includes(photo.id)) ?? media[0];
+---
+
+<BaseLayout
+  title={`${city.name} — ${entry.data.name} travel archive`}
+  description={city.description}
+  image={cover?.variants.at(-1)?.src}
+  theme="dark"
+  darkChrome
+>
+  <div class="city-page" data-gallery-only="true">
+    <nav class="city-page-breadcrumb" aria-label="Travel breadcrumb">
+      <a href="/photography">Travel atlas</a><span aria-hidden="true">/</span>
+      <a href={`/photography/${entry.id}`}>{entry.data.name}</a><span
+        aria-hidden="true">/</span
+      >
+      <span aria-current="page">{city.name}</span>
+    </nav>
+    <section class="city-archive-intro" aria-labelledby="city-title">
+      <p class="eyebrow">City archive / {media.length} frames</p>
+      <h1 id="city-title">{city.name}</h1>
+      <p>{city.description}</p>
+    </section>
+    <CityGallery cityName={city.name} media={media} />
+  </div>
+</BaseLayout>

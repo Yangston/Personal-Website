@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      astro:
+        patterns:
+          - astro
+          - "@astrojs/*"
+      testing-and-linting:
+        patterns:
+          - "@playwright/*"
+          - eslint
+          - "eslint-*"
+          - prettier
+          - "prettier-*"
+          - vitest
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

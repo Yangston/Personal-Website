@@ -1,15 +1,63 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import CollectionCard from "@/components/cards/CollectionCard.astro";
+import PhotographyGlobeLauncher from "@/components/photography/PhotographyGlobeLauncher.astro";
 import { getPhotography } from "@/lib/content";
-const collections = await getPhotography();
+import manifest from "@/data/photography-manifest.json";
+import { countryAtlasId } from "@/lib/photography-atlas/data";
+import { getGalleryCitiesForCountry } from "@/lib/photography-catalog";
+const entries = await getPhotography();
+const countries = entries.map((entry) => {
+  const countryPhotos = manifest.filter((item) => item.country === entry.id);
+  const orderedPreviewPhotos = [
+    ...countryPhotos.filter((item) => item.id === entry.data.coverId),
+    ...countryPhotos.filter((item) => item.id !== entry.data.coverId),
+  ].slice(0, 3);
+
+  return {
+    slug: entry.id,
+    name: entry.data.name,
+    isoCode: entry.data.isoCode,
+    atlasId: countryAtlasId(entry.id),
+    latitude: entry.data.coordinates.latitude,
+    longitude: entry.data.coordinates.longitude,
+    count: countryPhotos.length,
+    previewImages: orderedPreviewPhotos.flatMap((item) => {
+      const variant =
+        item.variants.find((candidate) => candidate.width >= 960) ??
+        item.variants.at(-1);
+      if (!variant) return [];
+      return [
+        {
+          src: variant.src,
+          width: variant.width,
+          height: Math.round((item.height / item.width) * variant.width),
+          alt: item.alt,
+        },
+      ];
+    }),
+    cities: getGalleryCitiesForCountry(entry.id).map((city) => ({
+      id: city.id,
+      name: city.name,
+      latitude: city.center.latitude,
+      longitude: city.center.longitude,
+    })),
+  };
+});
 ---
-<BaseLayout title="Photography — Stone Yang" description="Trips, collections, photographs, and films by Stone Yang.">
-  <header class="page-grid min-h-[68svh] items-end border-b border-ink pb-10 pt-16 md:pb-16">
-    <div class="col-span-6 md:col-span-9"><p class="eyebrow mb-8 text-signal">Photography archive</p><h1 class="display-title">Field<br/><span class="ml-[12vw] italic text-cobalt">notes.</span></h1></div>
-    <p class="col-span-5 col-start-2 mt-10 max-w-sm text-sm leading-relaxed md:col-span-3 md:col-start-10 md:mt-0">Trips, fragments, moving images, and evidence that I occasionally leave the computer.</p>
-  </header>
-  <section class="page-shell py-16 md:py-28">
-    {collections.length ? <div class="grid gap-x-8 gap-y-28 md:grid-cols-2">{collections.map((entry, index) => <CollectionCard entry={entry} index={index} />)}</div> : <div class="grid min-h-[45vh] place-items-center border border-dashed border-ink/35 p-8 text-center"><div><p class="font-display text-5xl italic md:text-7xl">Nothing rushed.</p><p class="mt-4 max-w-md text-sm uppercase leading-relaxed tracking-widest">The first collection will appear when it is ready. The gallery system is live; the photographs are still being selected.</p></div></div>}
-  </section>
+
+<BaseLayout
+  title="Travel — Stone Yang"
+  description="A geographic travel archive of photographs and field notes."
+  theme="dark"
+  immersive
+  cosmicScene="travel"
+>
+  <div class="photography-atlas">
+    <header class="atlas-heading">
+      <p class="eyebrow">
+        Travel archive / {String(manifest.length).padStart(3, "0")}
+      </p><h1>Field <em>coordinates.</em></h1>
+    </header>
+    <PhotographyGlobeLauncher countries={countries} />
+  </div>
 </BaseLayout>

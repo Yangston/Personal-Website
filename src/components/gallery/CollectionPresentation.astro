@@ -1,9 +1,0 @@
----
-import MediaGallery from "./MediaGallery";
-import type { CollectionEntry } from "astro:content";
-
-interface Props { entry: CollectionEntry<"photography">; }
-const { entry } = Astro.props;
-const media = entry.data.media;
----
-<MediaGallery client:visible media={media} presentation={entry.data.presentation} />
