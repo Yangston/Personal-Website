@@ -34,8 +34,8 @@ const forbidden = [
     "exact public capture timestamp",
   ],
   [
-    /Sightline|photograph-locator|photography-map|PhotoCalibration|scene\.json|CesiumSceneController/i,
-    "removed Sightline implementation",
+    /photograph-locator|photography-map|PhotoCalibration|scene\.json|CesiumSceneController/i,
+    "removed Sightline runtime implementation",
   ],
 ];
 
