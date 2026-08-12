@@ -110,14 +110,15 @@ test("projects are presented as distinct keyboard-reachable constellations", asy
   ).toBeVisible();
 
   const constellations = page.locator("[data-project-constellation]");
-  await expect(constellations).toHaveCount(2);
+  await expect(constellations).toHaveCount(3);
   await expect(constellations.first()).toHaveAttribute(
     "href",
-    "/projects/robotic-card-thrower",
+    "/projects/sightline",
   );
   await expect(page.locator(".project-constellation-number")).toHaveCount(0);
   await expect(page.locator(".project-constellation-motif")).toHaveCount(0);
   for (const [motif, starCount] of [
+    ["spatial sightline", 10],
     ["sleep signal", 8],
     ["poker dealer", 13],
   ] as const) {
@@ -177,7 +178,7 @@ test("projects are presented as distinct keyboard-reachable constellations", asy
     .locator(".project-constellation-summary");
   await expect(
     firstSummary.locator(".project-constellation-preview-image"),
-  ).toHaveAttribute("src", "/media/projects/robotic-card-thrower.svg");
+  ).toHaveAttribute("src", "/media/projects/sightline.svg");
   expect(
     await firstSummary.evaluate((element) =>
       Number.parseFloat(getComputedStyle(element).fontSize),
@@ -226,7 +227,7 @@ test("projects are presented as distinct keyboard-reachable constellations", asy
       ),
   ).toBeLessThan(40);
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/projects\/robotic-card-thrower$/);
+  await expect(page).toHaveURL(/\/projects\/sightline$/);
 });
 
 test("new project case studies retain the cosmic editorial theme", async ({
@@ -647,7 +648,7 @@ test("the orbital home scene uses the shared sky and one clean Earth rim", async
   ).toHaveAttribute("href", "/projects");
   await expect(
     page.getByRole("link", { name: "Signal me", exact: true }),
-  ).toHaveCount(0);
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Résumé", exact: true }),
   ).toBeVisible();

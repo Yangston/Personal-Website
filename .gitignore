@@ -8,6 +8,7 @@ inspection_profiles
 node_modules/
 dist/
 .astro/
+.playwright-mcp/
 test-results/
 playwright-report/
 .private/
