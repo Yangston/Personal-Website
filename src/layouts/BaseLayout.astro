@@ -2,6 +2,7 @@
 import "@/styles/global.css";
 import Navigation from "@/components/layout/Navigation.astro";
 import CosmicBackdrop from "@/components/cosmic/CosmicBackdrop.astro";
+import SpeedInsights from "@/components/SpeedInsights.tsx";
 import { site } from "@/config/site";
 import { ClientRouter } from "astro:transitions";
 
@@ -127,5 +128,6 @@ const canonical = new URL(Astro.url.pathname, publicSite);
         </footer>
       )
     }
+    <SpeedInsights client:load />
   </body>
 </html>
