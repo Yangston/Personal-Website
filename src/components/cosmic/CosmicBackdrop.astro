@@ -2,7 +2,7 @@
 import EarthProxy from "./EarthProxy.astro";
 
 interface Props {
-  scene: "home" | "travel" | "projects";
+  scene: "home" | "travel" | "projects" | "universe";
 }
 
 const { scene } = Astro.props;
@@ -29,10 +29,23 @@ const stars = Array.from({ length: 156 }, (_, index) => ({
   class="cosmic-backdrop"
   data-cosmic-backdrop
   data-scene={scene}
+  data-universe-home-presentation={scene === "universe"
+    ? "authored"
+    : undefined}
   transition:persist="cosmic-backdrop"
   aria-hidden="true"
 >
-  <div class="cosmic-backdrop-wash"></div>
+  <div class="cosmic-backdrop-wash" data-cosmic-backdrop-wash></div>
+  <img
+    class="cosmic-backdrop-nebula"
+    src={scene === "universe"
+      ? "/media/site/nebula-backdrop-v3.webp"
+      : "/media/site/alien-nebula.webp"}
+    width="1536"
+    height="1024"
+    alt=""
+    decoding="async"
+  />
   <div class="cosmic-backdrop-grid"></div>
   <svg
     class="cosmic-backdrop-stars"
@@ -53,12 +66,20 @@ const stars = Array.from({ length: 156 }, (_, index) => ({
       ))
     }
   </svg>
-  <div class="cosmic-route-earth" data-cosmic-route-earth>
-    <EarthProxy />
-  </div>
-  <div class="cosmic-flight-layer" data-cosmic-flight-layer>
-    <canvas data-cosmic-flight-canvas></canvas>
-  </div>
+  {
+    scene !== "universe" && (
+      <div class="cosmic-route-earth" data-cosmic-route-earth>
+        <EarthProxy />
+      </div>
+    )
+  }
+  {
+    scene !== "universe" && (
+      <div class="cosmic-flight-layer" data-cosmic-flight-layer>
+        <canvas data-cosmic-flight-canvas />
+      </div>
+    )
+  }
 </div>
 
 <script>
@@ -79,6 +100,7 @@ const stars = Array.from({ length: 156 }, (_, index) => ({
   }
 
   .cosmic-backdrop-wash,
+  .cosmic-backdrop-nebula,
   .cosmic-backdrop-grid,
   .cosmic-backdrop-stars {
     position: absolute;
@@ -92,6 +114,89 @@ const stars = Array.from({ length: 156 }, (_, index) => ({
       radial-gradient(circle at 72% 36%, #1a2336 0, transparent 29%),
       radial-gradient(circle at 28% 74%, #16241f 0, transparent 27%),
       radial-gradient(circle at 50% 48%, #10151d 0, #07090d 68%);
+  }
+
+  .cosmic-backdrop-nebula {
+    display: none;
+    object-fit: cover;
+  }
+
+  .cosmic-backdrop[data-scene="universe"] {
+    background: #f5f0e8;
+  }
+
+  .cosmic-backdrop[data-scene="universe"] .cosmic-backdrop-wash {
+    background: rgba(245, 240, 232, 0.34);
+  }
+
+  .cosmic-backdrop[data-scene="universe"] .cosmic-backdrop-nebula {
+    display: block;
+    opacity: 0.82;
+  }
+
+  .cosmic-backdrop[data-scene="universe"] .cosmic-backdrop-grid {
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgba(38, 34, 31, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(38, 34, 31, 0.08) 1px, transparent 1px);
+  }
+
+  .cosmic-backdrop[data-scene="universe"] .cosmic-backdrop-stars circle {
+    fill: #fff;
+  }
+
+  .cosmic-backdrop[data-scene="universe"]
+    .cosmic-backdrop-stars
+    .cosmic-star--twinkle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation-name: cosmic-star-twinkle;
+    animation-duration: var(--cosmic-twinkle-duration);
+    animation-delay: calc(var(--cosmic-star-delay) * -1);
+    animation-direction: normal;
+  }
+
+  .cosmic-backdrop[data-scene="universe"][data-universe-webgl="true"]:not(
+      [data-universe-home-presentation="authored"]
+    )
+    :is(
+      .cosmic-backdrop-nebula,
+      .cosmic-backdrop-grid,
+      .cosmic-backdrop-stars
+    ) {
+    opacity: 0;
+  }
+
+  .cosmic-backdrop[data-scene="universe"] .cosmic-backdrop-nebula,
+  .cosmic-backdrop[data-scene="universe"] .cosmic-backdrop-wash,
+  .cosmic-backdrop[data-scene="universe"] .cosmic-backdrop-grid {
+    transition:
+      opacity 900ms ease,
+      transform 900ms var(--ease-out-expo);
+  }
+
+  .cosmic-backdrop[data-scene="universe"][data-universe-scene="projects"]
+    .cosmic-backdrop-nebula {
+    opacity: 0.58;
+    transform: scale(1.08) translate3d(-2%, 1%, 0);
+  }
+
+  .cosmic-backdrop[data-scene="universe"][data-universe-scene="projects"]
+    .cosmic-backdrop-stars {
+    opacity: 0.95;
+    transform: scale(1.08);
+  }
+
+  .cosmic-backdrop[data-scene="universe"][data-universe-scene="travel"]
+    .cosmic-backdrop-nebula {
+    opacity: 0.48;
+    transform: scale(1.04) translate3d(2%, -1%, 0);
+  }
+
+  .cosmic-backdrop[data-scene="universe"][data-universe-scene="about"]
+    .cosmic-backdrop-nebula {
+    opacity: 0.92;
+    transform: scale(1.06) translate3d(-1%, -1%, 0);
   }
 
   .cosmic-backdrop-grid {
@@ -215,6 +320,9 @@ const stars = Array.from({ length: 156 }, (_, index) => ({
     }
 
     .cosmic-backdrop[data-scene="home"]
+      .cosmic-backdrop-stars
+      .cosmic-star--twinkle,
+    .cosmic-backdrop[data-scene="universe"]
       .cosmic-backdrop-stars
       .cosmic-star--twinkle {
       animation: none;

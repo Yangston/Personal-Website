@@ -1,37 +1,56 @@
 ---
 import "@/styles/global.css";
 import Navigation from "@/components/layout/Navigation.astro";
-import CosmicBackdrop from "@/components/cosmic/CosmicBackdrop.astro";
+import UniverseWorld from "@/components/cosmic/UniverseWorld.astro";
 import { site } from "@/config/site";
 import { ClientRouter } from "astro:transitions";
+import displayFont from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
+import displayItalic from "@fontsource-variable/fraunces/files/fraunces-latin-wght-italic.woff2?url";
+import bodyFont from "@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url";
+import universeFont from "@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-standard-normal.woff2?url";
+import universeItalic from "@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-standard-italic.woff2?url";
 
-type CosmicScene = "home" | "travel" | "projects";
+type CosmicScene = "home" | "travel" | "projects" | "universe";
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
+  noindex?: boolean;
   theme?: "light" | "dark";
   immersive?: boolean;
-  immersiveScroll?: boolean;
   cosmicScene?: CosmicScene;
   darkChrome?: boolean;
   clientTransitions?: boolean;
+  worldMode?: "universe" | "quiet";
+  returnScene?: "projects" | "travel";
 }
 
 const {
   title = site.title,
   description = site.description,
-  image = "/og-default.svg",
+  image = "/og-default.png",
+  imageAlt = title,
+  noindex = false,
   theme = "light",
   immersive = false,
-  immersiveScroll = false,
   cosmicScene,
   darkChrome = false,
   clientTransitions = false,
+  worldMode = "universe",
+  returnScene,
 } = Astro.props;
 const publicSite = Astro.site ?? new URL("https://stoneyang.ca");
 const canonical = new URL(Astro.url.pathname, publicSite);
+const socialImage = new URL(image.replace(/\.svg$/, ".png"), publicSite);
+const socialImageType = socialImage.pathname.endsWith(".png")
+  ? "image/png"
+  : socialImage.pathname.endsWith(".webp")
+    ? "image/webp"
+    : "image/jpeg";
+const hasSocialDimensions =
+  image === "/og-default.png" || image.endsWith(".svg");
 ---
 
 <!doctype html>
@@ -39,7 +58,30 @@ const canonical = new URL(Astro.url.pathname, publicSite);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <link
+      rel="preload"
+      href={immersive && worldMode !== "quiet" ? universeFont : displayFont}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href={immersive && worldMode !== "quiet" ? universeItalic : displayItalic}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href={bodyFont}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
     <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta
       name="theme-color"
       content={theme === "dark" ? "#11110f" : "#f4f0e8"}
@@ -47,12 +89,30 @@ const canonical = new URL(Astro.url.pathname, publicSite);
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_CA" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(image, publicSite)} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:type" content={socialImageType} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {hasSocialDimensions && <meta property="og:image:width" content="1200" />}
+    {hasSocialDimensions && <meta property="og:image:height" content="630" />}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <title>{title}</title>
+    {
+      cosmicScene === "universe" && worldMode === "universe" && (
+        <script
+          is:inline
+          set:html={`document.documentElement.dataset.worldScene=["home","about","projects","travel"].includes(location.hash.slice(1))?location.hash.slice(1):"home";`}
+        />
+      )
+    }
     {(cosmicScene || clientTransitions) && <ClientRouter fallback="swap" />}
     <style is:global>
       @view-transition {
@@ -66,14 +126,12 @@ const canonical = new URL(Astro.url.pathname, publicSite);
     </style>
   </head>
   <body
-    class:list={[
-      "grain",
-      immersive && "immersive-shell",
-      immersiveScroll && "immersive-scroll-shell",
-    ]}
+    class:list={["grain", immersive && "immersive-shell"]}
     data-cosmic-scene={cosmicScene}
+    data-world-mode={cosmicScene === "universe" ? worldMode : undefined}
+    data-return-scene={returnScene}
   >
-    {cosmicScene && <CosmicBackdrop scene={cosmicScene} />}
+    {cosmicScene && <UniverseWorld />}
     <a
       href="#main-content"
       class="fixed left-4 top-4 z-[100] -translate-y-24 bg-ink px-4 py-3 text-paper transition-transform focus:translate-y-0"
@@ -83,14 +141,11 @@ const canonical = new URL(Astro.url.pathname, publicSite);
       currentPath={Astro.url.pathname}
       items={site.nav}
       overlay={immersive || Boolean(cosmicScene) || darkChrome}
+      lightOverlay={cosmicScene === "universe"}
     />
     <main
       id="main-content"
-      class:list={[
-        immersive && "immersive-main",
-        immersiveScroll && "immersive-scroll-main",
-        cosmicScene && "cosmic-main",
-      ]}
+      class:list={[immersive && "immersive-main", cosmicScene && "cosmic-main"]}
       transition:animate="none"
     >
       <slot />
@@ -100,7 +155,8 @@ const canonical = new URL(Astro.url.pathname, publicSite);
         <footer
           class:list={[
             "page-shell border-t border-ink/25 py-8 md:py-12",
-            (cosmicScene || darkChrome) && "cosmic-footer",
+            ((cosmicScene && cosmicScene !== "universe") || darkChrome) &&
+              "cosmic-footer",
           ]}
         >
           <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

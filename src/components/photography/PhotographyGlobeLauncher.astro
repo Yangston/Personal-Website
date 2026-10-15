@@ -1,4 +1,5 @@
 ---
+import ScenePanel from "@/components/cosmic/ScenePanel.astro";
 import type { AtlasCountrySummary } from "@/lib/photography-atlas/data";
 import { hongKongAtlasFeature } from "@/lib/photography-atlas/hong-kong";
 
@@ -10,7 +11,12 @@ const { countries } = Astro.props;
 const hongKong = hongKongAtlasFeature;
 ---
 
-<section class="atlas-stage" data-atlas-launcher aria-label="Travel atlas">
+<section
+  class="atlas-stage"
+  data-atlas-launcher
+  data-atlas-overlays-ready="false"
+  aria-label="Travel atlas"
+>
   <canvas
     class="atlas-canvas"
     data-atlas-canvas
@@ -34,15 +40,13 @@ const hongKong = hongKongAtlasFeature;
       countries.map((country, index) => (
         <a
           href={`/photography/${country.slug}`}
-          data-astro-reload
           data-atlas-country={country.slug}
+          data-scene-panel-trigger={`country-preview-${country.slug}`}
           aria-label={`${country.name}, ${country.count} frames`}
         >
           <span>{String(index + 1).padStart(2, "0")}</span>
-          <strong style={`--atlas-character-count:${country.name.length}`}>
-            <span data-atlas-country-name data-text={country.name}>
-              {country.name}
-            </span>
+          <strong>
+            <span data-atlas-country-name>{country.name}</span>
           </strong>
           <small>{country.count} frames</small>
         </a>
@@ -54,11 +58,10 @@ const hongKong = hongKongAtlasFeature;
       countries.flatMap((country) =>
         country.cities.map((city) => (
           <a
-            href={`/photography/${country.slug}#city-${city.id}`}
-            data-astro-reload
+            href={`/photography/${country.slug}/${city.id}`}
             data-atlas-city={city.id}
             data-atlas-city-country={country.slug}
-            aria-label={`Open ${country.name} travel map at ${city.name}`}
+            aria-label={`Open ${city.name}, ${country.name} photography archive`}
           >
             <span class="atlas-city-marker-glyph" aria-hidden="true" />
             <span class="atlas-city-tooltip">
@@ -70,47 +73,59 @@ const hongKong = hongKongAtlasFeature;
       )
     }
   </nav>
-  <aside
-    class="atlas-country-preview"
-    data-atlas-country-preview
-    aria-label="Country preview"
-    aria-live="polite"
-  >
-    {
-      countries.map((country) => (
-        <article
-          data-atlas-preview-card={country.slug}
-          data-active="false"
-          aria-hidden="true"
-        >
-          <div class="atlas-preview-copy">
-            <p class="eyebrow">
-              {country.isoCode} / {String(country.count).padStart(3, "0")}{" "}
-              frames
-            </p>
-            <h2>{country.name}</h2>
-            <p>
-              Field notes from{" "}
-              {country.cities.map((city) => city.name).join(", ")}.
-            </p>
-          </div>
-          <div class="atlas-preview-images" aria-hidden="true">
+  {
+    countries.map((country) => (
+      <ScenePanel
+        id={`country-preview-${country.slug}`}
+        title={country.name}
+        eyebrow={`${country.isoCode} / ${country.count} photographs`}
+      >
+        {country.previewImages.length > 0 && (
+          <div class="country-preview-images">
             {country.previewImages.map((image) => (
               <img
-                src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-                data-atlas-preview-src={image.src}
+                src={image.src}
                 width={image.width}
                 height={image.height}
-                alt=""
+                alt={image.alt}
                 loading="lazy"
                 decoding="async"
               />
             ))}
           </div>
-        </article>
-      ))
-    }
-  </aside>
+        )}
+        <p class="country-preview-summary">
+          {country.cities.length
+            ? `Photographs from ${country.cities.map((city) => city.name).join(", ")}.`
+            : "Explore the published photographs in this archive."}
+        </p>
+        <a
+          class="country-preview-archive"
+          href={`/photography/${country.slug}`}
+        >
+          Explore {country.name}
+          <span aria-hidden="true">↗</span>
+        </a>
+        {country.cities.length > 0 && (
+          <nav
+            class="country-preview-cities"
+            aria-label={`${country.name} city archives`}
+          >
+            <p>City archives</p>
+            <ul>
+              {country.cities.map((city) => (
+                <li>
+                  <a href={`/photography/${country.slug}/${city.id}`}>
+                    {city.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </ScenePanel>
+    ))
+  }
   <p class="atlas-status" data-atlas-status aria-live="polite">
     Preparing the atlas…
   </p>
@@ -165,3 +180,130 @@ const hongKong = hongKongAtlasFeature;
     set:html={JSON.stringify(hongKong)}
   />
 </section>
+
+<style>
+  :global([data-portfolio-universe]) .atlas-stage .atlas-city-markers a {
+    color: #986a38;
+  }
+
+  :global([data-portfolio-universe]) .atlas-stage .atlas-city-marker-glyph {
+    border-color: #fff7e9;
+    box-shadow:
+      0 0 0 2px #91603388,
+      0 0 0.8rem #b9844b38;
+  }
+
+  :global([data-portfolio-universe])
+    .atlas-stage
+    .atlas-city-marker-glyph::before {
+    border-color: #986a385c;
+  }
+
+  :global([data-portfolio-universe])
+    .atlas-stage
+    .atlas-city-marker-glyph::after {
+    background: #65442c;
+  }
+
+  :global([data-portfolio-universe])
+    .atlas-stage
+    .atlas-city-markers
+    a:is(:hover, :focus-visible, [data-active="true"]) {
+    color: #a44830;
+  }
+
+  :global([data-portfolio-universe])
+    .atlas-stage
+    .atlas-city-markers
+    a:is(:hover, :focus-visible)
+    .atlas-city-marker-glyph {
+    box-shadow:
+      0 0 0 3px #a448308c,
+      0 0 1rem #c4784c45;
+  }
+
+  :global([data-portfolio-universe])
+    .atlas-stage
+    .atlas-city-markers
+    a:focus-visible {
+    outline: 2px solid #873c2d;
+    outline-offset: 0.15rem;
+    border-radius: 50%;
+  }
+
+  :global([data-portfolio-universe]) .atlas-stage .atlas-city-tooltip small {
+    color: #8a4933;
+  }
+
+  .country-preview-images {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .country-preview-images img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 0.2rem;
+  }
+
+  .country-preview-images img:first-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 10;
+  }
+
+  .country-preview-summary {
+    color: color-mix(in srgb, currentColor 76%, transparent);
+  }
+
+  .country-preview-archive {
+    display: flex;
+    min-height: 2.75rem;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 0.65rem;
+    border-block: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    font-weight: 550;
+  }
+
+  .country-preview-archive span {
+    flex: none;
+  }
+
+  .country-preview-cities {
+    margin-top: 1.5rem;
+  }
+
+  .country-preview-cities p {
+    margin-bottom: 0.5rem;
+    font: 0.65rem/1.5 var(--font-code);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .country-preview-cities ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .country-preview-cities a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding-block: 0.5rem;
+  }
+
+  .country-preview-archive:hover,
+  .country-preview-cities a:hover {
+    color: var(--universe-signal, #ef4529);
+  }
+</style>

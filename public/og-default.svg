@@ -1,8 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f4f0e8"/>
-  <circle cx="1040" cy="90" r="280" fill="none" stroke="#3157ff" stroke-width="90"/>
-  <path d="M760 630 900 150h110L890 630Z" fill="#ff5a36"/>
-  <text x="70" y="285" font-family="Georgia,serif" font-size="190" font-weight="700" letter-spacing="-14" fill="#11110f">Stone</text>
-  <text x="210" y="455" font-family="Georgia,serif" font-size="190" font-style="italic" font-weight="700" letter-spacing="-14" fill="#11110f">Yang</text>
-  <text x="75" y="565" font-family="Arial,sans-serif" font-size="28" font-weight="700" letter-spacing="5" fill="#11110f">ENGINEER · PHOTOGRAPHER · BUILDER</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow"><stop stop-color="#dcd6e8" stop-opacity=".9"/><stop offset="1" stop-color="#f5f0e8" stop-opacity="0"/></radialGradient>
+    <radialGradient id="planet" cx="30%" cy="26%"><stop stop-color="#fffcf3"/><stop offset=".58" stop-color="#dfe7e8"/><stop offset="1" stop-color="#ada5bd"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#f5f0e8"/>
+  <circle cx="958" cy="316" r="360" fill="url(#glow)"/>
+  <g fill="none" stroke="#b9adbf" stroke-opacity=".5">
+    <ellipse cx="1004" cy="376" rx="308" ry="204" transform="rotate(-29 1004 376)"/>
+    <ellipse cx="1004" cy="376" rx="350" ry="244" transform="rotate(-29 1004 376)"/>
+  </g>
+  <circle cx="1004" cy="376" r="179" fill="url(#planet)"/>
+  <g fill="#b5412c"><circle cx="805" cy="145" r="3"/><circle cx="1113" cy="106" r="2"/><circle cx="748" cy="410" r="2"/></g>
+  <text x="77" y="89" font-family="Arial,sans-serif" font-size="17" letter-spacing="4" fill="#655b62">A SMALL PART OF A WIDER UNIVERSE</text>
+  <text x="68" y="280" font-family="Georgia,serif" font-size="174" letter-spacing="-10" fill="#171615">Stone</text>
+  <text x="81" y="435" font-family="Georgia,serif" font-size="174" font-style="italic" letter-spacing="-10" fill="#b5412c">Yang.</text>
+  <text x="78" y="518" font-family="Arial,sans-serif" font-size="23" fill="#49413f">Engineer, photographer, curious builder.</text>
+  <text x="79" y="580" font-family="Arial,sans-serif" font-size="15" letter-spacing="2" fill="#655b62">STONEYANG.CA</text>
 </svg>

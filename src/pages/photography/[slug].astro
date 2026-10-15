@@ -30,9 +30,10 @@ const mappedCities = getGalleryCitiesForCountry(entry.id);
   title={`${name} — Travel by Stone Yang`}
   description={description}
   image={cover?.variants.at(-1)?.src}
-  theme="dark"
-  darkChrome
-  clientTransitions
+  imageAlt={cover?.alt}
+  cosmicScene="universe"
+  worldMode="quiet"
+  returnScene="travel"
 >
   <div
     class="country-page"
@@ -53,8 +54,21 @@ const mappedCities = getGalleryCitiesForCountry(entry.id);
 </BaseLayout>
 
 <script>
-  const route = document.querySelector<HTMLElement>("[data-country-route]");
-  if (route) {
+  let releaseCountryRoute = () => {};
+  const cleanupCountryRoute = () => {
+    releaseCountryRoute();
+    releaseCountryRoute = () => {};
+  };
+  const initializeCountryRoute = () => {
+    cleanupCountryRoute();
+    const route = document.querySelector<HTMLElement>("[data-country-route]");
+    if (!route) return;
+    const events = new AbortController();
+    let frame = 0;
+    releaseCountryRoute = () => {
+      events.abort();
+      cancelAnimationFrame(frame);
+    };
     const query = new URLSearchParams(location.search);
     const legacyCity = query.get("city");
     const cityRoutes = JSON.parse(route.dataset.cityRoutes ?? "[]") as string[];
@@ -66,6 +80,7 @@ const mappedCities = getGalleryCitiesForCountry(entry.id);
       const photo = query.get("photo");
       if (photo) target.searchParams.set("photo", photo);
       location.replace(target.href);
+      return;
     }
 
     const selectedCity = location.hash.startsWith("#city-")
@@ -80,25 +95,59 @@ const mappedCities = getGalleryCitiesForCountry(entry.id);
       route.dataset.selectedCity = selectedCity;
       selectedCallout.dataset.selected = "true";
       const focusCallout = () => {
+        if (!selectedCallout.isConnected) return;
         scrollTo(0, 0);
         selectedCallout.focus({ preventScroll: true });
       };
-      const settleCallout = () => requestAnimationFrame(focusCallout);
-      addEventListener(
-        "pagereveal",
-        (event) => {
-          const viewTransition = (
-            event as Event & { viewTransition?: { finished: Promise<unknown> } }
-          ).viewTransition;
-          settleCallout();
-          if (viewTransition) void viewTransition.finished.then(settleCallout);
-        },
-        { once: true },
-      );
-      if (document.readyState === "complete") settleCallout();
-      else addEventListener("load", settleCallout, { once: true });
-      requestAnimationFrame(() => requestAnimationFrame(focusCallout));
-      setTimeout(focusCallout, 700);
+      const settleCallout = () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(focusCallout);
+      };
+      addEventListener("pagereveal", settleCallout, { signal: events.signal });
+      settleCallout();
     }
-  }
+  };
+  document.addEventListener("astro:page-load", initializeCountryRoute);
+  document.addEventListener("astro:before-swap", cleanupCountryRoute);
+  initializeCountryRoute();
 </script>
+
+<style>
+  .country-page {
+    --collection-bg: var(--color-universe-paper);
+    --collection-fg: var(--color-universe-ink);
+    --collection-accent: color-mix(
+      in srgb,
+      var(--color-universe-coral) 58%,
+      var(--collection-fg)
+    );
+    --collection-secondary: #746784;
+    --collection-muted: color-mix(
+      in srgb,
+      var(--collection-fg) 76%,
+      transparent
+    );
+    --collection-line: color-mix(
+      in srgb,
+      var(--color-universe-lavender) 60%,
+      transparent
+    );
+    background: linear-gradient(180deg, transparent, #f5f0e8eb 85svh);
+    color: var(--collection-fg);
+  }
+  .country-note {
+    width: min(62rem, calc(100% - 2 * var(--page-gutter)));
+    margin-inline: auto;
+    margin-block: clamp(4rem, 9vw, 8rem);
+    color: var(--collection-muted);
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.3vw, 2rem);
+    font-weight: 400;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+  .country-note :global(a) {
+    color: var(--collection-accent);
+    text-underline-offset: 0.2em;
+  }
+</style>

@@ -52,6 +52,12 @@ Native demos are React code and require interaction, accessibility, reduced-moti
 
 Project covers currently live in `public/media/projects` and are manually managed. Record actual pixel dimensions, write scene-specific alt text, and optimize files before publishing. They do not use `npm run photos`. Files under `public` deploy even when the associated MDX is a draft, so draft status does not protect a private or unlicensed cover.
 
+Social previews use raster images so link unfurlers can display them reliably. After changing `public/og-default.svg` or an SVG project cover, run `node scripts/generate-social-images.mjs` to refresh its 1200 × 630 PNG companion. `BaseLayout.astro` selects those PNG companions for social metadata while the page retains the original vector cover. Commit both sources and previews; these public illustrations contain no private archival data. Project concept illustrations are labelled as illustrations in the case study.
+
+Project case studies derive their section directory from MDX `##` headings and link to the next published project. Keep headings descriptive and stable so section links remain useful. Editorial photography descriptions should describe the photographs and places; processing notes, capture-point classifications, and implementation details belong in contributor documentation.
+
+Universe artwork lives in `public/media/site` and is manually managed. Commit only optimized production assets; keep full-resolution generation sources outside Git. World-space nebula layers must be alpha-bearing WebPs with transparent edges so they can overlap cleanly while the camera travels through them.
+
 ## Photography collection
 
 Country files live at `src/content/photography/<country-slug>.mdx`. The filename becomes the country route and must match generated manifest `country` values.

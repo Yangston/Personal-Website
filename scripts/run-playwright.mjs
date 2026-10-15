@@ -1,12 +1,17 @@
-import { spawn, spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const production = process.env.PLAYWRIGHT_USE_PREVIEW === "1";
+const externalServer = process.env.PLAYWRIGHT_EXTERNAL_SERVER === "1";
 const astroCli = path.join(root, "node_modules/astro/bin/astro.mjs");
 const playwrightCli = path.join(root, "node_modules/@playwright/test/cli.js");
 const testEnvironment = { ...process.env };
+// Astro's Codex integration can detach a dev server before it is ready. Keep
+// this runner's server in the foreground so the tests always exercise the
+// current checkout and the process can be cleaned up deterministically.
+delete testEnvironment.CODEX_THREAD_ID;
 const serverArguments = [
   astroCli,
   production ? "preview" : "dev",
@@ -15,16 +20,20 @@ const serverArguments = [
   "--port",
   "4333",
 ];
-if (!production) serverArguments.push("--background");
-const server = spawn(process.execPath, serverArguments, {
-  cwd: root,
-  env: testEnvironment,
-  stdio: "inherit",
-});
+const server = externalServer
+  ? null
+  : spawn(process.execPath, serverArguments, {
+      cwd: root,
+      env: testEnvironment,
+      stdio: "inherit",
+    });
 
 async function waitForServer() {
-  for (let attempt = 0; attempt < 120; attempt += 1) {
-    if (production && server.exitCode !== null)
+  // A cold Astro dev compile can exceed one minute on the full universe bundle.
+  // Keep the readiness window above that cost while still failing immediately
+  // when the owned server process exits (for example, on a port conflict).
+  for (let attempt = 0; attempt < 360; attempt += 1) {
+    if (server.exitCode !== null)
       throw new Error(
         "The Astro browser-test server exited before it was ready.",
       );
@@ -59,15 +68,9 @@ function runPlaywright() {
 
 let exitCode = 1;
 try {
-  await waitForServer();
+  if (!externalServer) await waitForServer();
   exitCode = await runPlaywright();
 } finally {
-  if (production) server.kill();
-  else
-    spawnSync(process.execPath, [astroCli, "dev", "stop"], {
-      cwd: root,
-      env: testEnvironment,
-      stdio: "inherit",
-    });
+  server?.kill();
 }
 process.exitCode = exitCode;

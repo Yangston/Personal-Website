@@ -1,0 +1,290 @@
+{
+  "atmosphere": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/atmosphere-1672.webp",
+      "width": 1672,
+      "height": 941
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/atmosphere-836.webp",
+      "width": 836,
+      "height": 471
+    }
+  },
+  "nebula": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/nebula-1537.webp",
+      "width": 1537,
+      "height": 1023
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/nebula-768.webp",
+      "width": 768,
+      "height": 511
+    }
+  },
+  "upper-left": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/upper-left-650.webp",
+      "width": 650,
+      "height": 420
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/upper-left-325.webp",
+      "width": 325,
+      "height": 210
+    }
+  },
+  "upper-center": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/upper-center-520.webp",
+      "width": 520,
+      "height": 310
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/upper-center-260.webp",
+      "width": 260,
+      "height": 155
+    }
+  },
+  "upper-right": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/upper-right-552.webp",
+      "width": 552,
+      "height": 480
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/upper-right-276.webp",
+      "width": 276,
+      "height": 240
+    }
+  },
+  "left-wall": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/left-wall-410.webp",
+      "width": 410,
+      "height": 580
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/left-wall-205.webp",
+      "width": 205,
+      "height": 290
+    }
+  },
+  "lower-left": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/lower-left-690.webp",
+      "width": 690,
+      "height": 521
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/lower-left-345.webp",
+      "width": 345,
+      "height": 261
+    }
+  },
+  "lower-center": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/lower-center-650.webp",
+      "width": 650,
+      "height": 361
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/lower-center-325.webp",
+      "width": 325,
+      "height": 181
+    }
+  },
+  "right-wall": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/right-wall-502.webp",
+      "width": 502,
+      "height": 641
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/right-wall-251.webp",
+      "width": 251,
+      "height": 321
+    }
+  },
+  "lower-right": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/lower-right-780.webp",
+      "width": 780,
+      "height": 371
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/lower-right-390.webp",
+      "width": 390,
+      "height": 186
+    }
+  },
+  "left-bridge": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/left-bridge-410.webp",
+      "width": 410,
+      "height": 300
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/left-bridge-205.webp",
+      "width": 205,
+      "height": 150
+    }
+  },
+  "right-bridge": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/right-bridge-380.webp",
+      "width": 380,
+      "height": 360
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/right-bridge-190.webp",
+      "width": 190,
+      "height": 180
+    }
+  },
+  "crown-left": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/crown-left-300.webp",
+      "width": 300,
+      "height": 260
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/crown-left-150.webp",
+      "width": 150,
+      "height": 130
+    }
+  },
+  "crown-middle": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/crown-middle-240.webp",
+      "width": 240,
+      "height": 240
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/crown-middle-120.webp",
+      "width": 120,
+      "height": 120
+    }
+  },
+  "crown-right": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/crown-right-272.webp",
+      "width": 272,
+      "height": 280
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/crown-right-136.webp",
+      "width": 136,
+      "height": 140
+    }
+  },
+  "puff-left": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-left-250.webp",
+      "width": 250,
+      "height": 240
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-left-125.webp",
+      "width": 125,
+      "height": 120
+    }
+  },
+  "puff-midleft": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-midleft-280.webp",
+      "width": 280,
+      "height": 250
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-midleft-140.webp",
+      "width": 140,
+      "height": 125
+    }
+  },
+  "puff-lowerleft": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-lowerleft-350.webp",
+      "width": 350,
+      "height": 241
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-lowerleft-175.webp",
+      "width": 175,
+      "height": 121
+    }
+  },
+  "puff-bottom": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-bottom-310.webp",
+      "width": 310,
+      "height": 260
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-bottom-155.webp",
+      "width": 155,
+      "height": 130
+    }
+  },
+  "puff-right": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-right-282.webp",
+      "width": 282,
+      "height": 360
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-right-141.webp",
+      "width": 141,
+      "height": 180
+    }
+  },
+  "puff-lowerright": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-lowerright-350.webp",
+      "width": 350,
+      "height": 271
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/puff-lowerright-175.webp",
+      "width": 175,
+      "height": 136
+    }
+  },
+  "bridge-center": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/bridge-center-420.webp",
+      "width": 420,
+      "height": 370
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/bridge-center-210.webp",
+      "width": 210,
+      "height": 185
+    }
+  },
+  "distant-peak": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/distant-peak-245.webp",
+      "width": 245,
+      "height": 245
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/distant-peak-122.webp",
+      "width": 122,
+      "height": 122
+    }
+  },
+  "mist": {
+    "desktop": {
+      "source": "/media/site/celestial/cloudscape-v3/mist-480.webp",
+      "width": 480,
+      "height": 430
+    },
+    "mobile": {
+      "source": "/media/site/celestial/cloudscape-v3/mist-240.webp",
+      "width": 240,
+      "height": 215
+    }
+  }
+}

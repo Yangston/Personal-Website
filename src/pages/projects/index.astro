@@ -1,18 +1,3 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import ProjectConstellationField from "@/components/projects/ProjectConstellationField.astro";
-import { getProjects } from "@/lib/content";
-
-const projects = await getProjects();
+return Astro.redirect("/#projects", 308);
 ---
-
-<BaseLayout
-  title="Projects — Stone Yang"
-  description="Engineering projects and interactive experiments by Stone Yang, mapped as a field of constellations."
-  theme="dark"
-  immersive
-  immersiveScroll
-  cosmicScene="projects"
->
-  <ProjectConstellationField projects={projects} />
-</BaseLayout>

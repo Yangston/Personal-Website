@@ -324,6 +324,7 @@ function resetPersistentLayers(scene: CosmicScene) {
 }
 
 async function onPageLoad() {
+  if (document.body.dataset.cosmicScene === "universe") return;
   const scene = routeScene(window.location.pathname);
   if (!scene) return;
   document.body.dataset.cosmicScene = scene;
@@ -482,6 +483,7 @@ async function runRouteTransition(from: CosmicScene, to: CosmicScene) {
 }
 
 export function initializeCosmicTransitions() {
+  if (document.querySelector("[data-portfolio-universe]")) return;
   const cosmicWindow = window as CosmicWindow;
   if (cosmicWindow.__cosmicTransitionsInitialized) return;
   cosmicWindow.__cosmicTransitionsInitialized = true;

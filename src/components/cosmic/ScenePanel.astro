@@ -1,0 +1,154 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  eyebrow?: string;
+}
+
+const { id, title, eyebrow } = Astro.props;
+---
+
+<dialog
+  id={id}
+  class="scene-panel"
+  data-scene-panel={id}
+  aria-labelledby={`${id}-title`}
+>
+  <header class="scene-panel-heading">
+    <div>
+      {eyebrow && <p class="scene-panel-eyebrow">{eyebrow}</p>}
+      <h2 id={`${id}-title`} tabindex="-1" data-scene-panel-heading>{title}</h2>
+    </div>
+    <button
+      type="button"
+      class="scene-panel-close"
+      data-scene-panel-close
+      aria-label={`Close ${title}`}><span aria-hidden="true">×</span></button
+    >
+  </header>
+  <div class="scene-panel-content"><slot /></div>
+</dialog>
+
+<style>
+  .scene-panel {
+    --panel-top: clamp(6rem, 19svh, 12rem);
+    position: fixed;
+    z-index: 10000;
+    top: var(--panel-top);
+    right: max(var(--page-gutter, 2rem), 6vw);
+    bottom: auto;
+    left: auto;
+    width: min(28rem, calc(100vw - 2rem));
+    max-width: none;
+    max-height: calc(100svh - var(--panel-top) - 2rem);
+    margin: 0;
+    padding: clamp(1.5rem, 2.75vw, 2.5rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid
+      color-mix(in srgb, var(--universe-ink, #171615) 12%, transparent);
+    border-radius: 0.2rem;
+    background: #fcf7eef0;
+    color: var(--universe-ink, #171615);
+    box-shadow: 0 1.4rem 5rem rgb(77 50 48 / 9%);
+    backdrop-filter: blur(14px);
+    scrollbar-gutter: stable;
+  }
+
+  .scene-panel:not([open]) {
+    display: none;
+  }
+
+  .scene-panel[open] {
+    display: block;
+  }
+
+  .scene-panel::backdrop {
+    background: rgb(97 77 77 / 13%);
+  }
+
+  .scene-panel-heading {
+    display: flex;
+    gap: 1rem;
+    align-items: start;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .scene-panel-heading > div {
+    min-width: 0;
+  }
+
+  .scene-panel-eyebrow {
+    margin: 0 0 0.65rem;
+    color: var(--universe-signal, #ef4529);
+    font: 0.6rem/1.5 var(--font-code);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .scene-panel-heading h2 {
+    margin: 0;
+    font: 500 clamp(2.2rem, 3.2vw, 3.4rem)/1
+      var(--font-universe-display, var(--font-display));
+    letter-spacing: -0.04em;
+    overflow-wrap: anywhere;
+  }
+
+  .scene-panel-heading h2:focus {
+    outline: none;
+  }
+
+  .scene-panel-close {
+    display: grid;
+    flex: 0 0 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .scene-panel-close:hover {
+    color: var(--universe-signal, #ef4529);
+  }
+
+  .scene-panel-content {
+    min-width: 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  .scene-panel-content :global(p) {
+    margin: 0 0 1.2rem;
+  }
+
+  .scene-panel-content :global(a) {
+    text-underline-offset: 0.2em;
+  }
+
+  .scene-panel :global(:focus-visible) {
+    outline: 2px solid var(--universe-signal, #ef4529);
+    outline-offset: 0.25rem;
+  }
+
+  @media (max-width: 700px) {
+    .scene-panel {
+      inset: auto 0 0;
+      width: 100%;
+      max-height: min(68svh, calc(100svh - 4.5rem));
+      padding: 1.35rem 1.25rem calc(1.35rem + env(safe-area-inset-bottom));
+      border-right: 0;
+      border-bottom: 0;
+      border-left: 0;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+  }
+</style>

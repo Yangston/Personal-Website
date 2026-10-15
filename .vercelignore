@@ -1,8 +1,15 @@
 .astro/
+.env
+.env.*
+!.env.example
+.git/
+.playwright-mcp/
 .private/
 .venv-photo-calibration/
+*.log
 dist/
 node_modules/
 playwright-report/
 src/content/photography/iCloud Photos/
 test-results/
+tests/

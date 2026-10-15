@@ -7,11 +7,11 @@ export default defineConfig({
   testDir: "./tests",
   testMatch: "**/*.spec.ts",
   fullyParallel: true,
-  // First-time compilation of the globe and Cesium graphs is memory-heavy on Windows CI.
+  // Keep software-rendered universe tests from competing for the same GPU budget.
   workers: 1,
   timeout: 60_000,
   use: {
-    baseURL: "http://127.0.0.1:4333",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:4333",
     trace: "retain-on-failure",
   },
   webServer: useExternalServer

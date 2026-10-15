@@ -19,7 +19,7 @@ export default defineConfig({
     ? {
         adapter: vercel({
           imageService: true,
-          webAnalytics: { enabled: true },
+          webAnalytics: { enabled: process.env.VERCEL === "1" },
         }),
       }
     : {}),
@@ -30,6 +30,7 @@ export default defineConfig({
         ignored: [
           "**/.private/**",
           "**/.vercel/**",
+          "**/.venv-photo-calibration/**",
           "**/public/media/photography/**",
           "**/src/content/photography/iCloud Photos/**",
         ],

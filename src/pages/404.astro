@@ -2,21 +2,83 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Page not found — Stone Yang">
-  <section
-    class="page-shell grid min-h-[75svh] place-items-center py-20 text-center"
-  >
-    <div>
-      <p class="eyebrow text-signal">404 / Lost frame</p><h1
-        class="font-display text-[clamp(8rem,30vw,26rem)] leading-[.65] tracking-[-.1em] text-cobalt"
+<BaseLayout
+  title="Page not found — Stone Yang"
+  description="A little off course. Find your way back to Stone Yang’s projects and photography."
+  cosmicScene="universe"
+  worldMode="quiet"
+  noindex
+>
+  <section class="lost-page" aria-labelledby="lost-title">
+    <p class="eyebrow">404 / A little off course</p>
+    <p class="lost-coordinate" aria-hidden="true">404</p>
+    <h1 id="lost-title">Let’s find a <em>way back.</em></h1>
+    <p>
+      This page may have moved, or the address may be incomplete. There’s still
+      plenty to explore.
+    </p>
+    <nav aria-label="Find your way back">
+      <a href="/">Return home <span aria-hidden="true">↗</span></a>
+      <a href="/#projects">Explore projects <span aria-hidden="true">↗</span></a
       >
-        404
-      </h1><p class="mt-10 text-lg">
-        This part of the archive does not exist.
-      </p><a
-        class="mt-8 inline-block bg-ink px-6 py-4 font-bold uppercase tracking-wider text-paper"
-        href="/">Return home</a
-      >
-    </div>
+      <a href="/#travel">Travel archive <span aria-hidden="true">↗</span></a>
+    </nav>
   </section>
 </BaseLayout>
+
+<style>
+  .lost-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 86svh;
+    padding: 9rem var(--page-gutter) 5rem;
+    text-align: center;
+    color: var(--color-universe-ink);
+  }
+  .eyebrow {
+    color: #815443;
+  }
+  .lost-coordinate {
+    margin: 1rem 0;
+    color: #8f766c;
+    font: 400 clamp(6rem, 17vw, 14rem)/1 var(--font-universe-display);
+    letter-spacing: -0.08em;
+  }
+  h1 {
+    margin: 0;
+    font: 500 clamp(2.5rem, 5vw, 4.5rem)/1.08 var(--font-universe-display);
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+  h1 em {
+    color: #973b2b;
+  }
+  h1 + p {
+    max-width: 38ch;
+    margin: 1.4rem 0 2rem;
+    color: #675950;
+    line-height: 1.7;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.7rem 1.8rem;
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    gap: 1rem;
+    border-bottom: 1px solid #705c4b55;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  a:hover {
+    color: #973b2b;
+    border-color: currentColor;
+  }
+</style>

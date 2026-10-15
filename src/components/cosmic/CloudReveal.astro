@@ -1,0 +1,92 @@
+---
+import { initializeCloudReveal } from "@/lib/portfolio-universe/cloud-reveal";
+import artwork from "@/data/cloudscape-artwork.json";
+const upper = artwork["upper-left"];
+const lower = artwork["lower-left"];
+---
+
+<div class="cloud-reveal" data-cloud-reveal aria-hidden="true">
+  <img
+    class="reveal-bank reveal-bank--upper"
+    data-cloud-direction="upper-right"
+    src={upper.desktop.source}
+    srcset={`${upper.mobile.source} ${upper.mobile.width}w, ${upper.desktop.source} ${upper.desktop.width}w`}
+    sizes="150vw"
+    width={upper.desktop.width}
+    height={upper.desktop.height}
+    alt=""
+    fetchpriority="high"
+  />
+  <img
+    class="reveal-bank reveal-bank--lower"
+    data-cloud-direction="lower-left"
+    src={lower.desktop.source}
+    srcset={`${lower.mobile.source} ${lower.mobile.width}w, ${lower.desktop.source} ${lower.desktop.width}w`}
+    sizes="150vw"
+    width={lower.desktop.width}
+    height={lower.desktop.height}
+    alt=""
+    fetchpriority="high"
+  />
+</div>
+<script
+  is:inline
+  data-astro-rerun
+  set:html={`(${initializeCloudReveal.toString()})();`}
+/>
+
+<style>
+  .cloud-reveal {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+  }
+  .cloud-reveal[data-intro-state="playing"] {
+    visibility: visible;
+  }
+  .cloud-reveal[data-intro-state="waiting"] {
+    visibility: visible;
+    background: #f5f0e8;
+  }
+  .cloud-reveal[data-intro-state="waiting"] .reveal-bank {
+    visibility: hidden;
+  }
+  .reveal-bank {
+    position: absolute;
+    width: max(240vw, 220vh);
+    height: auto;
+    max-width: none;
+    user-select: none;
+    will-change: transform, opacity;
+  }
+  .reveal-bank--upper {
+    top: -45vw;
+    right: -70vw;
+    transform: rotate(180deg);
+  }
+  .reveal-bank--lower {
+    bottom: -45vw;
+    left: -70vw;
+  }
+  .cloud-reveal:not([data-intro-state="playing"]) .reveal-bank {
+    will-change: auto;
+  }
+  @media (max-width: 700px) {
+    .reveal-bank--upper {
+      top: -22vh;
+      right: -80vh;
+    }
+    .reveal-bank--lower {
+      bottom: -20vh;
+      left: -70vh;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cloud-reveal {
+      display: none;
+    }
+  }
+</style>

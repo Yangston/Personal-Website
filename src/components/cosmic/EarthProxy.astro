@@ -1,15 +1,22 @@
----
-import { site } from "@/config/site";
+﻿---
+import { getPhotography } from "@/lib/content";
+import { countryAtlasId } from "@/lib/photography-atlas/data";
 import {
-  HOME_BASE_POINT,
-  HOME_EARTH_LAND_ASSET,
+  HOME_EARTH_ROTATION,
+  TRAVEL_EARTH_ROTATION,
 } from "@/lib/cosmic-transitions/earth";
-
+import { earthArtwork } from "@/lib/portfolio-universe/earth-artwork";
 interface Props {
   class?: string;
 }
-
 const { class: className } = Astro.props;
+const visited = (await getPhotography()).map(({ id }) =>
+  String(countryAtlasId(id)),
+);
+const poses = [
+  { id: "home", rotation: HOME_EARTH_ROTATION },
+  { id: "travel", rotation: TRAVEL_EARTH_ROTATION },
+].map((pose) => ({ id: pose.id, ...earthArtwork(pose.rotation, visited) }));
 ---
 
 <svg
@@ -18,98 +25,50 @@ const { class: className } = Astro.props;
   viewBox="0 0 360 360"
   aria-hidden="true"
 >
-  <defs>
-    <radialGradient id="earth-atmosphere" cx="38%" cy="32%" r="68%">
-      <stop offset="0" stop-color="#425850" stop-opacity=".5"></stop>
-      <stop offset=".72" stop-color="#111816" stop-opacity=".72"></stop>
-      <stop offset="1" stop-color="#ff5a36" stop-opacity="0"></stop>
-    </radialGradient>
-    <filter id="earth-glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="7"></feGaussianBlur>
-    </filter>
-  </defs>
-  <circle
-    class="cosmic-earth-glow"
-    cx="180"
-    cy="180"
-    r="176"
-    fill="url(#earth-atmosphere)"
-    filter="url(#earth-glow)"></circle>
   <circle class="cosmic-earth-ocean" cx="180" cy="180" r="164"></circle>
-  <use class="cosmic-earth-land" href={HOME_EARTH_LAND_ASSET}></use>
-  <g
-    class="cosmic-earth-location"
-    data-home-base
-    transform={`translate(${HOME_BASE_POINT[0]} ${HOME_BASE_POINT[1]})`}
-  >
-    <circle class="cosmic-earth-location-halo" r="2.2"></circle>
-    <circle class="cosmic-earth-location-core" r="0.6"></circle>
-    <path d="M 3.2 0 H 7.2"></path>
-    <text class="cosmic-earth-location-place" x="9" y="1">
-      {site.location}
-    </text>
-  </g>
+  {
+    poses.map((pose) => (
+      <g data-earth-pose={pose.id}>
+        <>
+          <path class="cosmic-earth-land" d={pose.land} />
+          <path class="cosmic-earth-visited" d={pose.visited} />
+        </>
+      </g>
+    ))
+  }
   <circle class="cosmic-earth-rim" cx="180" cy="180" r="164"></circle>
 </svg>
-
 <style>
   .cosmic-earth {
     display: block;
     overflow: visible;
   }
-
   .cosmic-earth-ocean {
-    fill: #111713;
+    fill: #dce9ec;
   }
-
   .cosmic-earth-land {
-    fill: #252d27;
-    stroke: rgba(230, 236, 220, 0.17);
-    stroke-width: 0.65;
-    vector-effect: non-scaling-stroke;
+    fill: #f5f0e8;
+    stroke: rgba(67, 54, 65, 0.28);
+    stroke-width: 0.35;
   }
-
+  .cosmic-earth-visited {
+    fill: #bbb2d2;
+  }
   .cosmic-earth-rim {
     fill: none;
-    stroke: rgba(233, 239, 222, 0.34);
-    stroke-width: 1;
-    vector-effect: non-scaling-stroke;
+    stroke: rgba(67, 54, 65, 0.12);
+    stroke-width: 0.35;
   }
-
-  .cosmic-earth-location {
-    color: rgba(255, 118, 86, 0.72);
+  [data-earth-pose="travel"] {
+    display: none;
   }
-
-  .cosmic-earth-location-halo {
-    fill: rgba(255, 118, 86, 0.04);
-    stroke: currentColor;
-    stroke-width: 0.45;
+  [data-earth-pose="travel"] .cosmic-earth-visited {
+    fill: #ff8d6d;
   }
-
-  .cosmic-earth-location-core {
-    fill: rgba(240, 234, 220, 0.88);
+  :global(html[data-world-scene="travel"]) [data-earth-pose="travel"] {
+    display: block;
   }
-
-  .cosmic-earth-location path {
-    fill: none;
-    stroke: rgba(240, 234, 220, 0.38);
-    stroke-width: 0.45;
-  }
-
-  .cosmic-earth-location text {
-    font-family: var(--font-code);
-    text-transform: uppercase;
-  }
-
-  .cosmic-earth-location-place {
-    fill: rgba(240, 234, 220, 0.8);
-    font-size: 2.35px;
-    letter-spacing: 0.13em;
-  }
-
-  @media (max-width: 700px) {
-    .cosmic-earth-location-place {
-      font-size: 3.5px;
-    }
+  :global(html[data-world-scene="travel"]) [data-earth-pose="home"] {
+    display: none;
   }
 </style>

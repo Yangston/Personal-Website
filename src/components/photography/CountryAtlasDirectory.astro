@@ -73,6 +73,9 @@ const scenes = cities.map((city) => ({
     ))
   }
   <div class="country-map-intro">
+    <a class="country-map-return" href="/#travel">
+      <span aria-hidden="true">←</span> Return to the globe
+    </a>
     <p class="country-kicker">
       <span>{year}</span><span>{frameCount} frames</span>
     </p>
@@ -166,6 +169,189 @@ const scenes = cities.map((city) => ({
   </div>
 </section>
 
+<style>
+  .country-map-hero {
+    height: auto;
+    min-height: 0;
+    overflow: clip;
+    padding-bottom: clamp(1rem, 4vw, 4rem);
+  }
+  .country-map-intro {
+    position: relative;
+    inset: auto;
+    padding: clamp(6.5rem, 12vh, 8rem) var(--page-gutter) 0;
+    pointer-events: auto;
+  }
+  .country-map-return {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    justify-self: start;
+    margin-bottom: 1.5rem;
+    font: 0.65rem/1.5 var(--font-code);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .country-map-return:hover,
+  .country-map-return:focus-visible {
+    color: var(--collection-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
+  .country-kicker {
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--collection-line);
+    color: var(--collection-muted);
+  }
+  .country-map-title-block h1 {
+    line-height: 0.94;
+    overflow-wrap: anywhere;
+  }
+  .country-map-summary {
+    grid-column: 8 / -1;
+    align-self: end;
+    margin-top: 2rem;
+    color: var(--collection-muted);
+  }
+  .country-map-stage {
+    position: relative;
+    inset: auto;
+    height: clamp(25rem, 57vw, 48rem);
+    margin: 1rem var(--page-gutter) 0;
+  }
+  .country-silhouette-land,
+  .country-handoff-shape {
+    fill: color-mix(
+      in srgb,
+      var(--color-universe-pearl) 70%,
+      var(--color-universe-paper)
+    );
+    stroke: color-mix(
+      in srgb,
+      var(--color-universe-lavender) 72%,
+      var(--collection-fg)
+    );
+    stroke-width: 1.25;
+  }
+  .country-map-leader {
+    stroke: color-mix(in srgb, var(--collection-fg) 38%, transparent);
+    stroke-width: 1;
+  }
+  .country-map-photo-frame {
+    stroke: color-mix(in srgb, var(--color-universe-lavender) 80%, transparent);
+  }
+  .country-map-city-name {
+    fill: var(--collection-fg);
+    font-weight: 520;
+  }
+  .country-map-marker-ring {
+    fill: #ff8d6d26;
+    stroke: var(--collection-accent);
+  }
+  .country-map-marker {
+    fill: var(--collection-accent);
+  }
+  .country-city-directory {
+    border-color: var(--collection-line);
+    background: linear-gradient(135deg, #ffffff57, #dce9ec33);
+  }
+  .country-city-directory > header h2 {
+    line-height: 0.98;
+    overflow-wrap: anywhere;
+  }
+  .country-city-directory > header .eyebrow {
+    color: var(--collection-accent);
+  }
+  .country-city-grid {
+    gap: 1rem;
+    background: transparent;
+  }
+  .country-city-grid article {
+    border: 1px solid var(--collection-line);
+    background: #faf6ee82;
+    border-radius: 0.35rem;
+    transition: background 250ms ease;
+    overflow: hidden;
+  }
+  .country-city-grid article:hover,
+  .country-city-grid article:focus-within {
+    background: #e6e2ed80;
+  }
+  .country-city-grid a {
+    min-height: 21rem;
+    padding: 0 0 1.6rem;
+    height: 100%;
+  }
+  .country-city-grid a > :not(.city-directory-image) {
+    margin-inline: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .city-directory-image {
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    margin-bottom: 1.4rem;
+    background: var(--color-universe-pearl);
+  }
+  .city-directory-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms var(--ease-out-expo);
+  }
+  .country-city-grid a:is(:hover, :focus-visible) img {
+    transform: scale(1.035);
+  }
+  .country-city-grid h3 {
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+    font-weight: 500;
+    font-size: clamp(2rem, 2.7vw, 3rem);
+  }
+  .country-city-grid a > p {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+  }
+  .country-city-grid a > p {
+    color: var(--collection-muted);
+  }
+  .city-directory-meta {
+    font: 0.62rem/1.6 var(--font-code);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .country-city-grid a > span {
+    margin-top: auto;
+    padding-top: 2rem;
+    color: var(--collection-accent);
+  }
+  @media (max-width: 700px) {
+    .country-map-intro {
+      padding-top: 6.5rem;
+    }
+    .country-map-title-block h1 {
+      font-size: clamp(3rem, 15vw, 4.8rem);
+      line-height: 0.94;
+    }
+    .country-map-summary {
+      grid-column: 1 / -1;
+      margin-top: 0.7rem;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .country-map-stage {
+      height: clamp(21rem, 80vw, 32rem);
+      margin-inline: 0.25rem;
+    }
+    .country-map-city-name {
+      font-size: 30px;
+    }
+    .country-city-grid a {
+      min-height: 17rem;
+    }
+  }
+</style>
+
 <section
   class="country-city-directory"
   aria-labelledby="country-directory-title"
@@ -177,13 +363,36 @@ const scenes = cities.map((city) => ({
   </header>
   <div class="country-city-grid">
     {
-      scenes.map(({ city, photos }, index) => (
+      scenes.map(({ city, photos, samples }, index) => (
         <article id={`city-card-${city.id}`}>
           <a
             href={`/photography/${country}/${city.id}`}
             data-astro-prefetch="hover"
           >
-            <p>
+            {(samples[0] ?? photos[0]) &&
+              (() => {
+                const photo = samples[0] ?? photos[0];
+                const preview =
+                  photo.variants.find((variant) => variant.width >= 960) ??
+                  photo.variants.at(-1)!;
+                return (
+                  <div class="city-directory-image">
+                    <img
+                      src={preview.src}
+                      srcset={photo.variants
+                        .map((variant) => `${variant.src} ${variant.width}w`)
+                        .join(", ")}
+                      sizes="(max-width: 700px) calc(100vw - 2rem), (max-width: 1100px) 45vw, 30vw"
+                      width={photo.width}
+                      height={photo.height}
+                      alt={photo.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                );
+              })()}
+            <p class="city-directory-meta">
               0{index + 1} / {photos.length} frames
             </p>
             <h3>{city.name}</h3>

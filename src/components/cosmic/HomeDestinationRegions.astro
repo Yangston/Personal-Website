@@ -1,0 +1,215 @@
+---
+import {
+  SCENE_MANIFEST,
+  createCompositionFrame,
+  resolveWorldPlane,
+} from "@/lib/portfolio-universe/scene-manifest";
+import {
+  createProjectConstellationManifest,
+  createProjectConstellationWorldPoints,
+} from "@/lib/portfolio-universe/project-constellations";
+import {
+  projectHomeRegions,
+  regionLayout,
+  applyHomeRegions,
+} from "@/lib/portfolio-universe/home-regions";
+import { initializeHomeRegions } from "@/lib/portfolio-universe/home-region-markup";
+import contour from "@/data/nebula-hit-contour.json";
+interface Props {
+  projectIds: string[];
+}
+const stars = createProjectConstellationManifest(
+  Astro.props.projectIds,
+).flatMap((visual) =>
+  createProjectConstellationWorldPoints(
+    visual,
+    SCENE_MANIFEST.anchors.projects,
+  ),
+);
+const nebula = SCENE_MANIFEST.planes.find((plane) => plane.id === "nebula")!;
+const inputs = {
+  earth: SCENE_MANIFEST.anchors.earth,
+  radius: SCENE_MANIFEST.earthRadius,
+  nebula,
+  contour,
+  stars,
+};
+const frames = (
+  [
+    [1440, 900],
+    [390, 844],
+  ] as const
+).map(([width, height]) => {
+  const frame = createCompositionFrame("home", width, height, SCENE_MANIFEST);
+  return projectHomeRegions(
+    frame.project,
+    frame.pose.position,
+    {
+      ...inputs,
+      stars: stars.map(frame.projectToWorld),
+      nebula: resolveWorldPlane(nebula, width, height),
+    },
+    false,
+  );
+});
+const layoutStyle = (id: string, mode: number) => {
+  const region = frames[mode].find((region) => region.id === id)!;
+  const value = regionLayout(region),
+    width = mode ? 390 : 1440,
+    height = mode ? 844 : 900;
+  const prefix = mode ? "--mobile-region" : "--region";
+  return `${prefix}-x:calc(50vw + ${((value.left - width / 2) / height) * 100}vh);${prefix}-y:${(value.top / height) * 100}vh;${prefix}-w:${(value.width / height) * 100}vh;${prefix}-h:${(value.height / height) * 100}vh;${prefix}-clip:polygon(${value.polygon});z-index:${10000 - Math.round(region.depth * 10)}`;
+};
+const manifest = { ...SCENE_MANIFEST, planes: [] };
+const bootstrap = `(${initializeHomeRegions.toString()})(${createCompositionFrame.toString()},${JSON.stringify(manifest)},${resolveWorldPlane.toString()},${projectHomeRegions.toString()},${regionLayout.toString()},${applyHomeRegions.toString()});`;
+---
+
+<nav
+  class="home-regions"
+  data-home-regions
+  aria-label="Explore this solar system"
+>
+  {
+    [
+      { id: "about", name: "About", interaction: "about" },
+      { id: "projects", name: "Projects", interaction: "projects" },
+      { id: "travel", name: "Travel", interaction: "earth" },
+    ].map((destination) => (
+      <a
+        class="home-region"
+        href={`/#${destination.id}`}
+        data-universe-link
+        data-universe-destination={destination.id}
+        data-universe-interaction={destination.interaction}
+        aria-label={destination.name}
+        style={`${layoutStyle(destination.id, 0)};${layoutStyle(destination.id, 1)}`}
+      >
+        <span class="sr-only">{destination.name}</span>
+        <svg
+          viewBox="0 0 1000 1000"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            data-region-outline
+            data-region-variant="desktop"
+            d={
+              regionLayout(
+                frames[0].find((region) => region.id === destination.id)!,
+              ).outline
+            }
+          />
+          <path
+            data-region-outline
+            data-region-variant="mobile"
+            d={
+              regionLayout(
+                frames[1].find((region) => region.id === destination.id)!,
+              ).outline
+            }
+          />
+        </svg>
+      </a>
+    ))
+  }
+  <script
+    type="application/json"
+    data-home-region-inputs
+    is:inline
+    set:html={JSON.stringify(inputs)}
+  />
+</nav>
+<script is:inline data-astro-rerun set:html={bootstrap} />
+<style>
+  .home-regions {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: clip;
+    pointer-events: none;
+  }
+  .home-regions[inert] {
+    visibility: hidden;
+  }
+  .home-region {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--region-w);
+    height: var(--region-h);
+    transform: translate3d(var(--region-x), var(--region-y), 0);
+    clip-path: var(--region-clip);
+    pointer-events: auto;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .home-region svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  [data-region-variant="mobile"] {
+    display: none;
+  }
+  .home-region path {
+    fill: none;
+    stroke: #fff0ce;
+    stroke-width: 5px;
+    vector-effect: non-scaling-stroke;
+    opacity: 0;
+    filter: drop-shadow(0 0 8px #f7d79f);
+    transition: opacity 280ms ease;
+  }
+  .home-region:active path {
+    opacity: 0.4;
+    transition-duration: 180ms;
+  }
+  .home-region:focus-visible path {
+    opacity: 1;
+    stroke: #65506e;
+    stroke-width: 5px;
+    filter: drop-shadow(0 0 4px #fff6df);
+  }
+  :global(html:not([data-universe-enhanced]))
+    .home-region:not(:focus-visible):not(:hover):not(:active)
+    path {
+    opacity: 0.18;
+  }
+  :global(html:not([data-universe-enhanced]))
+    .home-region:hover:not(:focus-visible)
+    path,
+  :global(.portfolio-universe[data-renderer-type="fallback"])
+    .home-region:hover:not(:focus-visible)
+    path {
+    opacity: 0.35;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  @media (max-width: 700px) {
+    [data-region-variant="desktop"] {
+      display: none;
+    }
+    [data-region-variant="mobile"] {
+      display: block;
+    }
+    .home-region {
+      width: var(--mobile-region-w);
+      height: var(--mobile-region-h);
+      transform: translate3d(var(--mobile-region-x), var(--mobile-region-y), 0);
+      clip-path: var(--mobile-region-clip);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home-region path {
+      transition: none;
+    }
+  }
+</style>

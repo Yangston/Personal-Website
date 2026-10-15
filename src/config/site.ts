@@ -3,7 +3,7 @@ export const site = {
   shortName: "SY",
   title: "Stone Yang — Engineer, photographer, builder",
   description:
-    "The portfolio of Stone Yang: engineering projects, interactive experiments, photography, and films.",
+    "Engineering, machine learning, and travel photography by Stone Yang. Explore working prototypes, research, and a visual archive of places along the way.",
   introduction:
     "I build intelligent systems and collect the strange, quiet moments around them.",
   bio: "Engineer, photographer, and curious builder working where software, machines, and visual storytelling overlap.",
@@ -16,8 +16,9 @@ export const site = {
     { label: "Instagram", href: "https://www.instagram.com/stoneyanggg/" },
   ],
   nav: [
-    { label: "Home", href: "/" },
-    { label: "Travel", href: "/photography" },
-    { label: "Projects", href: "/projects" },
+    { label: "Home", href: "/#home" },
+    { label: "About", href: "/#about" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Travel", href: "/#travel" },
   ],
 } as const;

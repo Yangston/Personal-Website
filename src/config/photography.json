@@ -93,7 +93,7 @@
       "id": "taipei-north-coast",
       "regionKey": "taiwan/taipei-north-coast",
       "name": "Taipei & North Coast",
-      "description": "A broad scene spanning Taipei streets, mountain settlements, coast, and grassland.",
+      "description": "Taipei streets give way to mountain settlements, open grassland, and the island's weathered northern coast.",
       "center": {
         "latitude": 25.09,
         "longitude": 121.62
@@ -110,7 +110,7 @@
       "id": "bangkok",
       "regionKey": "thailand/bangkok",
       "name": "Bangkok",
-      "description": "iPhone capture points across central Bangkok.",
+      "description": "Bright avenues, river air, and rain-slick streets reflecting Bangkok after dark.",
       "center": {
         "latitude": 13.758,
         "longitude": 100.5
@@ -127,7 +127,7 @@
       "id": "toronto",
       "regionKey": "canada/toronto",
       "name": "Toronto",
-      "description": "Waterfront, streetcar, downtown, and elevated city views across iPhone captures.",
+      "description": "A familiar city seen through downtown crossings, winter waterfronts, and changing evening light.",
       "center": {
         "latitude": 43.653,
         "longitude": -79.393
@@ -144,7 +144,7 @@
       "id": "hong-kong",
       "regionKey": "hong-kong/hong-kong",
       "name": "Hong Kong",
-      "description": "Steep streets, market lanes, and layered urban facades across iPhone captures.",
+      "description": "Steep streets and market lanes, dense facades and gardens, with the harbour always close by.",
       "center": {
         "latitude": 22.315,
         "longitude": 114.165
@@ -161,7 +161,7 @@
       "id": "chongqing",
       "regionKey": "china/chongqing",
       "name": "Chongqing",
-      "description": "Fujifilm poses used to exercise terrain and marker fallbacks.",
+      "description": "Bridges, steep streets, and illuminated facades in a city that seems to rise in every direction.",
       "center": {
         "latitude": 29.56,
         "longitude": 106.56
@@ -178,7 +178,7 @@
       "id": "elora",
       "regionKey": "canada/elora",
       "name": "Elora",
-      "description": "Region-level placement for Grand River photographs without per-frame GPS.",
+      "description": "A quiet summer view of historic stone buildings along the Grand River.",
       "center": {
         "latitude": 43.68,
         "longitude": -80.43
@@ -195,7 +195,7 @@
       "id": "guilin-yangshuo",
       "regionKey": "china/guilin-yangshuo",
       "name": "Guilin & Yangshuo",
-      "description": "Region-level placement across the Li River karst landscape.",
+      "description": "Karst hills dissolve into river mist, while village rooflines catch the light after sunset.",
       "center": {
         "latitude": 24.773,
         "longitude": 110.496
@@ -212,7 +212,7 @@
       "id": "zhangjiajie",
       "regionKey": "china/zhangjiajie",
       "name": "Zhangjiajie",
-      "description": "Region-level placement for the Wulingyuan mountain archive.",
+      "description": "Sandstone pillars, forested heights, and winding roads that make the scale of the mountains tangible.",
       "center": {
         "latitude": 29.117,
         "longitude": 110.479
@@ -229,7 +229,7 @@
       "id": "chiang-mai",
       "regionKey": "thailand/chiang-mai",
       "name": "Chiang Mai",
-      "description": "Region-level placement for northern Thailand photographs.",
+      "description": "Northern landscapes, temple roofs, and wooden houses glowing in the evening light.",
       "center": {
         "latitude": 18.79,
         "longitude": 98.99

@@ -40,12 +40,14 @@ const cover =
   title={`${city.name} — ${entry.data.name} travel archive`}
   description={city.description}
   image={cover?.variants.at(-1)?.src}
-  theme="dark"
-  darkChrome
+  imageAlt={cover?.alt}
+  cosmicScene="universe"
+  worldMode="quiet"
+  returnScene="travel"
 >
   <div class="city-page" data-gallery-only="true">
     <nav class="city-page-breadcrumb" aria-label="Travel breadcrumb">
-      <a href="/photography">Travel atlas</a><span aria-hidden="true">/</span>
+      <a href="/#travel">Travel atlas</a><span aria-hidden="true">/</span>
       <a href={`/photography/${entry.id}`}>{entry.data.name}</a><span
         aria-hidden="true">/</span
       >
@@ -59,3 +61,46 @@ const cover =
     <CityGallery cityName={city.name} media={media} />
   </div>
 </BaseLayout>
+
+<style>
+  .city-page {
+    --collection-bg: var(--color-universe-paper);
+    --collection-fg: var(--color-universe-ink);
+    --collection-accent: color-mix(
+      in srgb,
+      var(--color-universe-coral) 58%,
+      var(--collection-fg)
+    );
+    --collection-secondary: #746784;
+    --collection-muted: color-mix(
+      in srgb,
+      var(--collection-fg) 76%,
+      transparent
+    );
+    --collection-line: color-mix(
+      in srgb,
+      var(--color-universe-lavender) 60%,
+      transparent
+    );
+    color: var(--collection-fg);
+    background: linear-gradient(180deg, transparent, #f5f0e8eb 85svh);
+  }
+  .city-page-breadcrumb {
+    color: var(--collection-muted);
+    line-height: 1.6;
+    font-size: 0.65rem;
+  }
+  .city-archive-intro h1 {
+    padding-bottom: 0.12em;
+    line-height: 0.98;
+    overflow-wrap: anywhere;
+  }
+  .city-archive-intro > p:last-child {
+    color: var(--collection-muted);
+  }
+  @media (max-width: 700px) {
+    .city-archive-intro h1 {
+      font-size: clamp(3rem, 14vw, 5rem);
+    }
+  }
+</style>

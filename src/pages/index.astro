@@ -1,15 +1,65 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import OrbitalHome from "@/components/cosmic/OrbitalHome.astro";
+import PortfolioUniverse from "@/components/cosmic/PortfolioUniverse.astro";
 import { site } from "@/config/site";
+import { getPhotography, getProjects } from "@/lib/content";
+import manifest from "@/data/photography-manifest.json";
+import { countryAtlasId } from "@/lib/photography-atlas/data";
+import { getGalleryCitiesForCountry } from "@/lib/photography-catalog";
+
+const [projects, photography] = await Promise.all([
+  getProjects(),
+  getPhotography(),
+]);
+const countries = photography.map((entry) => {
+  const countryPhotos = manifest.filter((item) => item.country === entry.id);
+  const orderedPreviewPhotos = [
+    ...countryPhotos.filter((item) => item.id === entry.data.coverId),
+    ...countryPhotos.filter((item) => item.id !== entry.data.coverId),
+  ].slice(0, 3);
+
+  return {
+    slug: entry.id,
+    name: entry.data.name,
+    isoCode: entry.data.isoCode,
+    atlasId: countryAtlasId(entry.id),
+    latitude: entry.data.coordinates.latitude,
+    longitude: entry.data.coordinates.longitude,
+    count: countryPhotos.length,
+    previewImages: orderedPreviewPhotos.flatMap((item) => {
+      const variant =
+        item.variants.find((candidate) => candidate.width >= 960) ??
+        item.variants.at(-1);
+      if (!variant) return [];
+      return [
+        {
+          src: variant.src,
+          width: variant.width,
+          height: Math.round((item.height / item.width) * variant.width),
+          alt: item.alt,
+        },
+      ];
+    }),
+    cities: getGalleryCitiesForCountry(entry.id).map((city) => ({
+      id: city.id,
+      name: city.name,
+      latitude: city.center.latitude,
+      longitude: city.center.longitude,
+    })),
+  };
+});
 ---
 
 <BaseLayout
   title={site.title}
   description={site.description}
-  theme="dark"
+  theme="light"
   immersive
-  cosmicScene="home"
+  cosmicScene="universe"
 >
-  <OrbitalHome />
+  <PortfolioUniverse
+    projects={projects}
+    countries={countries}
+    photographCount={manifest.length}
+  />
 </BaseLayout>

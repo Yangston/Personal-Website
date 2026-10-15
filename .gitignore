@@ -11,6 +11,9 @@ dist/
 .playwright-mcp/
 test-results/
 playwright-report/
+design-qa-*.png
+design-qa-*.jpg
+universe-home-current.png
 .private/
 .venv-photo-calibration/
 __pycache__/

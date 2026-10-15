@@ -1,0 +1,463 @@
+---
+import EarthProxy from "./EarthProxy.astro";
+import { NEBULA_GRADE_FILTER } from "@/lib/portfolio-universe/nebula-light";
+import {
+  createProjectConstellationManifest,
+  createProjectConstellationWorldPoints,
+} from "@/lib/portfolio-universe/project-constellations";
+import { updateProjectFallback } from "@/lib/portfolio-universe/project-fallback";
+import CloudReveal from "./CloudReveal.astro";
+import { getProjects } from "@/lib/content";
+import {
+  SCENE_MANIFEST,
+  createCompositionFrame,
+  resolveWorldPlane,
+} from "@/lib/portfolio-universe/scene-manifest";
+import { initializeWorldMarkup } from "@/lib/portfolio-universe/world-markup";
+import { projectedArtworkTransform } from "@/lib/portfolio-universe/artwork-projection";
+import type { WorldPoint } from "@/lib/portfolio-universe/scene-manifest";
+import artwork from "@/data/cloudscape-artwork.json";
+import {
+  CELESTIAL_BODIES,
+  bodySize,
+  bodyArtwork,
+  sampleBody,
+} from "@/lib/portfolio-universe/body-manifest";
+const projects = await getProjects();
+const bootstrap = `(${initializeWorldMarkup.toString()})(${createCompositionFrame.toString()},${JSON.stringify(SCENE_MANIFEST)},${projectedArtworkTransform.toString()},${resolveWorldPlane.toString()},${updateProjectFallback.toString()});`;
+const desktopFrame = createCompositionFrame("home", 1440, 900, SCENE_MANIFEST);
+const mobileFrame = createCompositionFrame("home", 390, 844, SCENE_MANIFEST);
+const fallbackStyle = (
+  position: WorldPoint,
+  width: number,
+  height = width,
+  mobilePosition = position,
+  mobileWidth = width,
+  mobileHeight = height,
+) => {
+  const desktop = desktopFrame.project(position, width, height)?.bounds ?? {
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+  };
+  const mobile = mobileFrame.project(mobilePosition, mobileWidth, mobileHeight)
+    ?.bounds ?? { left: 0, top: 0, width: 0, height: 0 };
+  return `--fallback-x:${(desktop.left - 720) / 900};--fallback-y:${desktop.top / 900};--fallback-w:${desktop.width / 900};--fallback-h:${desktop.height / 900};--mobile-x:${(mobile.left - 195) / 844};--mobile-y:${mobile.top / 844};--mobile-w:${mobile.width / 844};--mobile-h:${mobile.height / 844}`;
+};
+---
+
+<div
+  class="universe-world"
+  style={`--nebula-grade:${NEBULA_GRADE_FILTER}`}
+  data-universe-world
+  data-cosmic-backdrop
+  data-scene="universe"
+  data-world-mode="universe"
+  data-renderer-type="pending"
+  data-webgl-ready="false"
+  transition:persist="ivory-universe-world"
+  aria-hidden="true"
+>
+  <img
+    class="world-backdrop"
+    data-world-backdrop
+    src={artwork.atmosphere.desktop.source}
+    srcset={`${artwork.atmosphere.mobile.source} ${artwork.atmosphere.mobile.width}w, ${artwork.atmosphere.desktop.source} ${artwork.atmosphere.desktop.width}w`}
+    sizes="100vw"
+    width={artwork.atmosphere.desktop.width}
+    height={artwork.atmosphere.desktop.height}
+    alt=""
+    fetchpriority="high"
+  />
+  <div class="world-depth-planes" data-world-depth-planes>
+    {
+      SCENE_MANIFEST.planes.map((authored) => {
+        const plane = resolveWorldPlane(authored, 1440, 900);
+        const mobile = resolveWorldPlane(authored, 390, 844);
+        return (
+          <img
+            data-world-plane={plane.id}
+            src={plane.source}
+            srcset={
+              plane.source === plane.mobileSource
+                ? undefined
+                : `${plane.mobileSource} ${plane.mobileWidth}w, ${plane.source} ${plane.sourceWidth}w`
+            }
+            sizes="(max-width: 700px) 100vw, 85vw"
+            data-plane-mobile={plane.mobile ? "true" : "false"}
+            width={plane.sourceWidth}
+            height={plane.sourceHeight}
+            style={`--plane-opacity:${plane.opacity};z-index:${Math.round(1_000_000 - (desktopFrame.project(plane.position)?.depth ?? 1000) * 100)};${fallbackStyle(plane.position, plane.width, plane.height, mobile.position, mobile.width, mobile.height)}`}
+            alt=""
+            decoding="async"
+          />
+        );
+      })
+    }
+  </div>
+  {
+    CELESTIAL_BODIES.map((body) => (
+      <div
+        class="world-body-fallback"
+        data-world-body={body.id}
+        data-body-mobile={body.mobile ? "true" : "false"}
+        style={`--body-opacity:${body.opacity};z-index:${Math.round(1_000_000 - desktopFrame.project(body.position)!.depth * 100)};${fallbackStyle(
+          body.position,
+          bodySize(body),
+          bodySize(body),
+          sampleBody(body, 0, false, 390).position,
+        )}`}
+      >
+        <picture>
+          <source
+            media="(max-width: 700px)"
+            srcset={bodyArtwork(body, 390).source}
+          />
+          <img
+            src={bodyArtwork(body).source}
+            width={bodyArtwork(body).width}
+            height={bodyArtwork(body).height}
+            alt=""
+            decoding="async"
+            loading={body.mobile ? "eager" : "lazy"}
+          />
+        </picture>
+      </div>
+    ))
+  }
+  <div
+    class="world-earth-fallback"
+    data-world-earth-fallback
+    data-home-earth-source
+    style={fallbackStyle(
+      SCENE_MANIFEST.anchors.earth,
+      SCENE_MANIFEST.earthRadius * 2,
+    )}
+  >
+    <EarthProxy />
+    <img
+      class="world-earth-photographic world-earth-photographic--home"
+      src="/media/site/celestial/earth-home-fallback.webp"
+      width="1024"
+      height="1024"
+      alt=""
+    />
+    <img
+      class="world-earth-photographic world-earth-photographic--travel"
+      src="/media/site/celestial/earth-travel-fallback.webp"
+      width="1024"
+      height="1024"
+      alt=""
+    />
+  </div>
+  <svg
+    class="world-project-fallback"
+    data-world-project-fallback
+    viewBox="0 0 1440 900"
+  >
+    {
+      createProjectConstellationManifest(projects.map(({ id }) => id)).map(
+        (visual) => {
+          const vertices = createProjectConstellationWorldPoints(
+            visual,
+            SCENE_MANIFEST.anchors.projects,
+          );
+          const points = vertices.map((p) =>
+            desktopFrame.project(desktopFrame.projectToWorld(p))!,
+          );
+          return (
+            <g data-project-vertices={JSON.stringify(vertices)}>
+              {visual.edges.map(([a, b]) => (
+                <line
+                  data-edge={`${a},${b}`}
+                  x1={points[a].x}
+                  y1={points[a].y}
+                  x2={points[b].x}
+                  y2={points[b].y}
+                  stroke="#f3d6a4"
+                  stroke-width="1"
+                  opacity="0.8"
+                />
+              ))}
+              {points.map((p, i) => (
+                <g data-star={i} transform={`translate(${p.x} ${p.y})`}>
+                  <circle
+                    r={i % 4 === 0 ? 10 : 5}
+                    fill="url(#project-star-halo)"
+                  />
+                  {i % 4 === 0 && (
+                    <path
+                      d="M0-13 1.2-1.2 10 0 1.2 1.2 0 13-1.2 1.2-10 0-1.2-1.2Z"
+                      fill="#fff2d8"
+                    />
+                  )}
+                  <circle r="1.5" fill="#fff9e9" />
+                </g>
+              ))}
+            </g>
+          );
+        },
+      )
+    }
+    <defs
+      ><radialGradient id="project-star-halo"
+        ><stop stop-color="#ffe6b0" stop-opacity="0.8"></stop><stop
+          offset="1"
+          stop-color="#efc381"
+          stop-opacity="0"></stop></radialGradient
+      ></defs
+    >
+  </svg>
+  <canvas class="world-canvas" data-universe-renderer></canvas>
+  <div class="world-reading-wash"></div>
+  <script
+    type="application/json"
+    is:inline
+    data-world-projects
+    set:html={JSON.stringify(projects.map(({ id }) => id))}
+  />
+  <script
+    type="application/json"
+    is:inline
+    data-world-bodies
+    set:html={JSON.stringify(
+      CELESTIAL_BODIES.map((body) => ({
+        id: body.id,
+        position: body.position,
+        mobilePosition: sampleBody(body, 0, false, 390).position,
+        size: bodySize(body),
+        opacity: body.opacity,
+        mobile: body.mobile,
+      })),
+    )}
+  />
+</div>
+<CloudReveal />
+<script is:inline data-astro-rerun set:html={bootstrap} />
+
+<script>
+  import { synchronizeWorldPage } from "@/lib/portfolio-universe/world";
+  synchronizeWorldPage();
+  document.addEventListener("astro:page-load", synchronizeWorldPage);
+</script>
+
+<style>
+  .universe-world {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background: var(--color-universe-paper);
+    isolation: isolate;
+    contain: strict;
+  }
+  .world-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+  }
+  .world-depth-planes {
+    position: absolute;
+    inset: 0;
+    z-index: auto;
+  }
+  [data-world-plane] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: auto;
+    max-width: none;
+    object-fit: contain;
+    opacity: var(--plane-opacity);
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+  :global(html[data-world-scene="about"]) [data-world-plane="nebula"] {
+    filter: var(--nebula-grade);
+  }
+  .world-earth-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 997300;
+    width: 12rem;
+    height: 12rem;
+    transform-origin: 0 0;
+  }
+  .world-body-fallback {
+    opacity: var(--body-opacity, 1);
+    position: absolute;
+    top: 0;
+    left: calc(50vw + var(--fallback-x) * 100vh);
+    top: calc(var(--fallback-y) * 100vh);
+    width: calc(var(--fallback-w) * 100vh);
+    height: calc(var(--fallback-h) * 100vh);
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+  .world-body-fallback img {
+    width: 100%;
+    height: 100%;
+  }
+  .universe-world[data-webgl-ready="true"]
+    .world-body-fallback[data-body-ready="true"] {
+    visibility: hidden;
+  }
+  .universe-world[data-world-mode="quiet"] .world-body-fallback {
+    opacity: 0.15;
+  }
+  .universe-world[data-world-mode="quiet"] .world-reading-wash::after {
+    content: "";
+    position: absolute;
+    inset: -5%;
+    background:
+      radial-gradient(ellipse at 25% 35%, #c9bfd9aa, transparent 50%),
+      radial-gradient(ellipse at 80% 65%, #f3d6b7aa, transparent 48%);
+    opacity: 0.2;
+    animation: quiet-cloud-light 14s ease-in-out infinite alternate;
+  }
+  .universe-world[data-document-hidden="true"] .world-reading-wash::after {
+    animation-play-state: paused;
+  }
+  @keyframes quiet-cloud-light {
+    to {
+      transform: translate3d(3%, 2%, 0);
+      opacity: 0.42;
+    }
+  }
+  .world-earth-fallback[data-behind-camera="true"] {
+    visibility: hidden;
+  }
+  [data-world-plane],
+  .world-earth-fallback {
+    left: calc(50vw + var(--fallback-x) * 100vh);
+    top: calc(var(--fallback-y) * 100vh);
+    width: calc(var(--fallback-w) * 100vh);
+    height: calc(var(--fallback-h) * 100vh);
+  }
+  .world-earth-fallback :global(.cosmic-earth) {
+    position: absolute;
+    inset: -4.88%;
+    width: 109.76%;
+    height: 109.76%;
+  }
+  .world-earth-photographic {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .world-earth-photographic--travel {
+    display: none;
+  }
+  :global(html[data-world-scene="travel"]) .world-earth-photographic--home {
+    display: none;
+  }
+  :global(html[data-world-scene="travel"]) .world-earth-photographic--travel {
+    display: block;
+  }
+  .world-earth-fallback :global(.cosmic-earth-ocean) {
+    fill: #dce9ec;
+  }
+  .world-earth-fallback :global(.cosmic-earth-land) {
+    fill: #f5f0e8;
+    stroke: rgba(67, 54, 65, 0.28);
+  }
+  .world-earth-fallback :global(.cosmic-earth-rim) {
+    stroke: rgba(67, 54, 65, 0.2);
+  }
+  .world-earth-fallback :global(.cosmic-earth-glow),
+  .world-earth-fallback :global(.cosmic-earth-location) {
+    display: none;
+  }
+  .world-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 2000000;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+  }
+  .world-project-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 975000;
+  }
+  .universe-world[data-webgl-ready="true"] .world-project-fallback,
+  .universe-world[data-world-mode="quiet"] .world-project-fallback,
+  :global(html[data-world-scene]:not([data-world-scene="home"]))
+    .world-project-fallback {
+    display: none;
+  }
+  .universe-world[data-webgl-ready="true"] .world-canvas {
+    visibility: visible;
+  }
+  .universe-world[data-artwork-ready="true"]
+    :is(.world-depth-planes, .world-backdrop) {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .universe-world[data-webgl-ready="true"] .world-earth-fallback {
+    visibility: hidden;
+  }
+  .universe-world[data-atlas-fallback-ready="true"][data-active-scene="travel"]
+    .world-earth-fallback {
+    visibility: hidden;
+  }
+  .world-reading-wash {
+    position: absolute;
+    z-index: 2000001;
+    inset: 0;
+    background: #f5f0e8;
+    opacity: 0;
+    transition: opacity 320ms ease;
+  }
+  .universe-world[data-world-mode="quiet"] .world-reading-wash {
+    opacity: 0.88;
+  }
+  .universe-world[data-world-mode="quiet"]
+    :is(.world-canvas, .world-depth-planes, .world-earth-fallback) {
+    opacity: 0.4;
+  }
+  @media (max-width: 700px) {
+    .world-body-fallback {
+      left: calc(50vw + var(--mobile-x) * 100vh);
+      top: calc(var(--mobile-y) * 100vh);
+      width: calc(var(--mobile-w) * 100vh);
+      height: calc(var(--mobile-h) * 100vh);
+    }
+    [data-body-mobile="false"] {
+      display: none;
+    }
+    [data-world-plane],
+    .world-earth-fallback {
+      left: calc(50vw + var(--mobile-x) * 100vh);
+      top: calc(var(--mobile-y) * 100vh);
+      width: calc(var(--mobile-w) * 100vh);
+      height: calc(var(--mobile-h) * 100vh);
+    }
+    .world-backdrop {
+      opacity: 0.58;
+    }
+    [data-plane-mobile="false"] {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .universe-world[data-world-mode="quiet"] .world-reading-wash::after {
+      animation: none;
+    }
+    [data-world-plane] {
+      will-change: auto;
+    }
+  }
+</style>

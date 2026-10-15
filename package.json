@@ -4,13 +4,13 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "24.x"
+    "node": ">=24.16.0 <25"
   },
   "overrides": {
     "path-to-regexp": "6.3.0"
   },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "node scripts/dev.mjs",
     "photos": "node scripts/photography/import.mjs",
     "photos:rebuild": "node scripts/photography/archive.mjs",
     "photos:check": "node scripts/photography/archive.mjs --check",
@@ -31,6 +31,7 @@
     "@astrojs/react": "^6.0.1",
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^11.0.3",
+    "@fontsource-variable/bodoni-moda": "^5.3.0",
     "@fontsource-variable/fraunces": "^5.2.8",
     "@fontsource-variable/space-grotesk": "^5.2.10",
     "@fontsource/jetbrains-mono": "^5.2.8",
@@ -43,6 +44,7 @@
     "react-dom": "^19.2.8",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.3",
+    "three": "0.185.1",
     "topojson-client": "^3.1.0",
     "world-atlas": "^2.0.2"
   },
@@ -52,6 +54,7 @@
     "@types/d3-geo": "^3.1.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "0.185.4",
     "@types/topojson-client": "^3.1.5",
     "eslint": "^10.8.1",
     "eslint-plugin-astro": "^3.1.0",

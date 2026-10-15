@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  atlasCanvasPixelRatio,
+  atlasLabelLeaderPoints,
+  compareAtlasCountryHitPriority,
   countryAtlasId,
   isCoordinateVisible,
+  placeAtlasLabels,
   placeGlobeAroundHeading,
   placeCountryCallouts,
   shortestLongitudeTarget,
@@ -22,6 +26,22 @@ describe("photography atlas identity and projection", () => {
     expect(countryAtlasId("china")).toBe(156);
     expect(countryAtlasId("hong-kong")).toBe(344);
     expect(countryAtlasId("not-published")).toBeUndefined();
+  });
+
+  it("tests nested country hits with Hong Kong first, then smallest area", () => {
+    const candidates = [
+      { slug: "china", area: 0.23 },
+      { slug: "taiwan", area: 0.00084 },
+      { slug: "hong-kong", area: 0.5 },
+      { slug: "canada", area: 0.24 },
+    ];
+
+    expect(candidates.sort(compareAtlasCountryHitPriority)).toEqual([
+      { slug: "hong-kong", area: 0.5 },
+      { slug: "taiwan", area: 0.00084 },
+      { slug: "china", area: 0.23 },
+      { slug: "canada", area: 0.24 },
+    ]);
   });
 
   it("detects whether a coordinate is on the visible orthographic hemisphere", () => {
@@ -68,6 +88,10 @@ describe("photography atlas identity and projection", () => {
       bottom: 208,
     });
     expect(desktop.centerX - desktop.scale * 1.12).toBeGreaterThanOrEqual(718);
+    expect(desktop.centerX).toBeCloseTo(1700 * 0.69);
+    expect(1700 - (desktop.centerX + desktop.scale)).toBeGreaterThanOrEqual(
+      120,
+    );
 
     const compact = placeGlobeAroundHeading(320, 720, 134, {
       left: 16,
@@ -76,6 +100,122 @@ describe("photography atlas identity and projection", () => {
       bottom: 154,
     });
     expect(compact.centerY - compact.scale * 1.12).toBeGreaterThanOrEqual(182);
+  });
+
+  it("keeps projected country labels near their anchors without overlap", () => {
+    const labels = placeAtlasLabels(
+      [
+        {
+          id: "china",
+          anchorX: 820,
+          anchorY: 410,
+          width: 72,
+          height: 44,
+        },
+        {
+          id: "hong-kong",
+          anchorX: 830,
+          anchorY: 416,
+          width: 96,
+          height: 44,
+        },
+        {
+          id: "canada",
+          anchorX: 570,
+          anchorY: 430,
+          width: 82,
+          height: 44,
+        },
+      ],
+      1200,
+      760,
+      { centerX: 760, centerY: 410, scale: 260 },
+    );
+    const china = labels.find((label) => label.id === "china");
+    const hongKong = labels.find((label) => label.id === "hong-kong");
+    const canada = labels.find((label) => label.id === "canada");
+
+    expect(china?.side).toBe(1);
+    expect(hongKong?.side).toBe(-1);
+    expect(canada?.side).toBe(-1);
+    expect(Math.abs((china?.x ?? 0) - 820)).toBeLessThan(100);
+    expect(Math.abs((hongKong?.x ?? 0) - 830)).toBeLessThan(100);
+    expect(Math.abs((canada?.x ?? 0) - 570)).toBeLessThan(100);
+
+    for (const [index, label] of labels.entries()) {
+      expect(label.x - label.width / 2).toBeGreaterThanOrEqual(8);
+      expect(label.x + label.width / 2).toBeLessThanOrEqual(1_192);
+      expect(label.y - label.height / 2).toBeGreaterThanOrEqual(8);
+      expect(label.y + label.height / 2).toBeLessThanOrEqual(752);
+      for (const other of labels.slice(index + 1)) {
+        const separated =
+          label.x + label.width / 2 + 8 <= other.x - other.width / 2 ||
+          other.x + other.width / 2 + 8 <= label.x - label.width / 2 ||
+          label.y + label.height / 2 + 8 <= other.y - other.height / 2 ||
+          other.y + other.height / 2 + 8 <= label.y - label.height / 2;
+        expect(separated).toBe(true);
+      }
+    }
+  });
+
+  it("clamps labels, avoids obstacles, and keeps the prior candidate slot", () => {
+    const seed = {
+      id: "taiwan",
+      anchorX: 600,
+      anchorY: 300,
+      width: 80,
+      height: 44,
+    };
+    const obstacle = { left: 620, right: 708, top: 225, bottom: 285 };
+    const [first] = placeAtlasLabels(
+      [seed],
+      1_200,
+      760,
+      { centerX: 600, centerY: 380, scale: 260 },
+      [obstacle],
+    );
+    const [next] = placeAtlasLabels(
+      [{ ...seed, anchorX: 606, side: first.side, slot: first.slot }],
+      1_200,
+      760,
+      { centerX: 600, centerY: 380, scale: 260 },
+      [obstacle],
+    );
+    const [edge] = placeAtlasLabels(
+      [{ ...seed, anchorX: 1_195, anchorY: 6, width: 100 }],
+      1_200,
+      760,
+      { centerX: 600, centerY: 380, scale: 260 },
+    );
+
+    expect(first.side).toBe(-1);
+    expect(next.slot).toBe(first.slot);
+    expect(edge.x + edge.width / 2).toBe(1_192);
+    expect(edge.y - edge.height / 2).toBe(8);
+  });
+
+  it("draws a three-point leader with an 18px horizontal terminal", () => {
+    const points = atlasLabelLeaderPoints([830, 416], {
+      x: 760,
+      y: 340,
+      width: 96,
+      height: 44,
+      side: -1,
+    });
+
+    expect(points).toHaveLength(3);
+    expect(points[0]).toEqual([830, 416]);
+    expect(points[1][1]).toBe(points[2][1]);
+    expect(Math.abs(points[2][0] - points[1][0])).toBe(18);
+    expect(
+      Math.hypot(points[1][0] - points[0][0], points[1][1] - points[0][1]),
+    ).toBeGreaterThan(18);
+  });
+
+  it("caps the atlas backing store at two device pixels per CSS pixel", () => {
+    expect(atlasCanvasPixelRatio(1.25)).toBe(1.25);
+    expect(atlasCanvasPixelRatio(3)).toBe(2);
+    expect(atlasCanvasPixelRatio(Number.NaN)).toBe(1);
   });
 
   it("keeps detailed country silhouettes within the static HTML budget", () => {

@@ -1,0 +1,62 @@
+{
+  "ringed-planet": {
+    "desktop": {
+      "source": "/media/site/celestial/bodies-v1/ringed-planet-1024.webp",
+      "width": 1024,
+      "height": 1024
+    },
+    "mobile": {
+      "source": "/media/site/celestial/bodies-v1/ringed-planet-512.webp",
+      "width": 512,
+      "height": 512
+    }
+  },
+  "crescent-moon": {
+    "desktop": {
+      "source": "/media/site/celestial/bodies-v1/crescent-moon-1024.webp",
+      "width": 1024,
+      "height": 1024
+    },
+    "mobile": {
+      "source": "/media/site/celestial/bodies-v1/crescent-moon-512.webp",
+      "width": 512,
+      "height": 512
+    }
+  },
+  "asteroid-chalk": {
+    "desktop": {
+      "source": "/media/site/celestial/bodies-v1/asteroid-chalk-1024.webp",
+      "width": 1024,
+      "height": 1024
+    },
+    "mobile": {
+      "source": "/media/site/celestial/bodies-v1/asteroid-chalk-512.webp",
+      "width": 512,
+      "height": 512
+    }
+  },
+  "asteroid-iron": {
+    "desktop": {
+      "source": "/media/site/celestial/bodies-v1/asteroid-iron-1024.webp",
+      "width": 1024,
+      "height": 1024
+    },
+    "mobile": {
+      "source": "/media/site/celestial/bodies-v1/asteroid-iron-512.webp",
+      "width": 512,
+      "height": 512
+    }
+  },
+  "asteroid-ice": {
+    "desktop": {
+      "source": "/media/site/celestial/bodies-v1/asteroid-ice-1024.webp",
+      "width": 1024,
+      "height": 1024
+    },
+    "mobile": {
+      "source": "/media/site/celestial/bodies-v1/asteroid-ice-512.webp",
+      "width": 512,
+      "height": 512
+    }
+  }
+}

@@ -1,0 +1,426 @@
+---
+import { almanac } from "@/config/almanac";
+import {
+  NEBULA_INTEREST_REGIONS,
+  placeNebulaRegions,
+} from "@/lib/portfolio-universe/nebula-regions";
+import { resolveCloudLayout } from "@/lib/portfolio-universe/cloud-layout";
+import {
+  SCENE_MANIFEST,
+  createCompositionFrame,
+  resolveWorldPlane,
+} from "@/lib/portfolio-universe/scene-manifest";
+const pillars = NEBULA_INTEREST_REGIONS.map((region) => ({
+  ...region,
+  entries: almanac[region.id],
+}));
+const cloudAsset = (id: string, size: number) =>
+  `/media/site/about-nebula/${id}-${size}.webp`;
+const icons = {
+  camera:
+    '<path d="M8 9l3-4h10l3 4h4v18H4V9z"/><circle cx="16" cy="18" r="6"/><path d="M24 12h1"/>',
+  dice: '<rect x="5" y="5" width="22" height="22" rx="4"/><circle cx="11" cy="11" r="1"/><circle cx="21" cy="11" r="1"/><circle cx="16" cy="16" r="1"/><circle cx="11" cy="21" r="1"/><circle cx="21" cy="21" r="1"/>',
+  cards:
+    '<rect x="10" y="5" width="17" height="23" rx="2"/><path d="M7 24H4V2h17v1M18 11l4 5-4 5-4-5z"/>',
+  city: '<path d="M3 28V12h8v16M11 28V5h11v23M22 28V16h7v12M14 10h5M14 15h5M14 20h5M1 28h30"/>',
+};
+const bootstrap = `(() => {
+  const resolve = ${resolveWorldPlane.toString()};
+  const create = ${createCompositionFrame.toString()};
+  const layout = ${resolveCloudLayout.toString()};
+  const place = ${placeNebulaRegions.toString()};
+  const manifest = ${JSON.stringify({ ...SCENE_MANIFEST, planes: SCENE_MANIFEST.planes.filter((plane) => plane.id === "nebula") })};
+  const regions = ${JSON.stringify(NEBULA_INTEREST_REGIONS)};
+  window.__nebulaRegionsCleanup?.();
+  const apply = () => {
+    const root = document.querySelector('[data-portfolio-universe]');
+    if (!root || root.dataset.enhanced === 'true') return;
+    const frame = create('about', innerWidth, innerHeight, manifest, undefined, resolve);
+    const plane = resolve(manifest.planes.find(plane => plane.id === 'nebula'), innerWidth, innerHeight);
+    place(root, regions, frame.project(plane.position, plane.width, plane.height), { width: innerWidth, height: innerHeight }, layout);
+  };
+  apply();
+  window.addEventListener('resize', apply);
+  window.__nebulaRegionsCleanup = () => window.removeEventListener('resize', apply);
+})();`;
+---
+
+<div class="about-clouds" data-about-clouds aria-label="Personal interests">
+  {
+    pillars.map((pillar) => (
+      <section
+        class="interest-cloud"
+        data-cloud={pillar.id}
+        data-open="false"
+        aria-label={pillar.name}
+      >
+        <img
+          class="cloud-layer cloud-rear"
+          src={cloudAsset(pillar.id, 640)}
+          srcset={`${cloudAsset(pillar.id, 320)} 320w, ${cloudAsset(pillar.id, 640)} 640w`}
+          sizes="(max-width: 700px) 140px, 260px"
+          width="640"
+          height="640"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+        />
+        <button
+          type="button"
+          class="cloud-toggle"
+          data-cloud-toggle={pillar.id}
+          data-universe-interaction={`cloud:${pillar.id}`}
+          aria-label={`${pillar.name}: ${pillar.label}`}
+          aria-expanded="false"
+          aria-controls={`cloud-items-${pillar.id}`}
+        >
+          <span class="cloud-name">{pillar.name}</span>
+          <span class="cloud-label" data-cloud-label>
+            {pillar.label}
+          </span>
+        </button>
+        <ul
+          class="cloud-items"
+          id={`cloud-items-${pillar.id}`}
+          data-cloud-items
+          inert
+          aria-hidden="true"
+        >
+          {pillar.entries.map((entry) => (
+            <li class="cloud-item" data-cloud-item>
+              <button
+                type="button"
+                class:list={[
+                  "floating-item",
+                  {
+                    "hobby-item": "icon" in entry,
+                    "book-item": pillar.id === "books",
+                  },
+                ]}
+                data-floating-item={entry.id}
+                aria-label={
+                  "credit" in entry
+                    ? `${entry.title}: ${entry.credit}`
+                    : entry.title
+                }
+                aria-pressed="false"
+                aria-describedby={`caption-${entry.id}`}
+              >
+                <span class="item-artwork">
+                  {"artwork" in entry ? (
+                    <img
+                      src={entry.artwork.source}
+                      width={entry.artwork.width}
+                      height={entry.artwork.height}
+                      alt={entry.artwork.alt}
+                      loading="eager"
+                      fetchpriority="low"
+                      decoding="async"
+                    />
+                  ) : (
+                    <svg
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      set:html={icons[entry.icon]}
+                    />
+                  )}
+                  <span class="item-image-fallback" aria-hidden="true">
+                    {entry.title}
+                  </span>
+                </span>
+                <span class="item-caption" id={`caption-${entry.id}`}>
+                  <strong>{entry.title}</strong>
+                  {"credit" in entry && <span>{entry.credit}</span>}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <img
+          class="cloud-layer cloud-front"
+          src={cloudAsset(pillar.id, 640)}
+          srcset={`${cloudAsset(pillar.id, 320)} 320w, ${cloudAsset(pillar.id, 640)} 640w`}
+          sizes="(max-width: 700px) 140px, 260px"
+          width="640"
+          height="640"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+        />
+      </section>
+    ))
+  }
+  <p class="mobile-cloud-caption" data-cloud-caption hidden>
+    <strong></strong><span></span>
+  </p>
+</div>
+<script is:inline data-astro-rerun set:html={bootstrap} />
+<style>
+  .about-clouds {
+    display: none;
+  }
+  :global(html[data-world-scene]) .about-clouds {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .interest-cloud {
+    position: absolute;
+    left: var(--cloud-x, 50%);
+    top: var(--cloud-y, 50%);
+    width: var(--cloud-width, 220px);
+    height: var(--cloud-height, 220px);
+    transform: translate(-50%, -50%) scale(var(--cloud-scale, 1));
+    isolation: isolate;
+    visibility: hidden;
+  }
+  .interest-cloud[data-region-ready="true"] {
+    visibility: visible;
+  }
+  .cloud-layer {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    object-fit: contain;
+    /* Lift the light already painted inside the vapor; no overlay or halo. */
+    filter: brightness(calc(1 + var(--cloud-hover, 0) * 0.12))
+      saturate(calc(1 + var(--cloud-hover, 0) * 0.06));
+    translate: var(--cloud-drift-x, 0px) var(--cloud-drift-y, 0px);
+    rotate: var(--cloud-roll, 0deg);
+    scale: var(--cloud-breath, 1);
+  }
+  .cloud-rear {
+    z-index: 0;
+    transform: translateY(calc(var(--cloud-open, 0) * -5px));
+  }
+  .cloud-front {
+    z-index: 4;
+    mask-image: linear-gradient(transparent 49%, #000 70%);
+    transform: translateY(calc(var(--cloud-open, 0) * 3px));
+  }
+  .cloud-toggle {
+    position: absolute;
+    inset: 0 0 -38px;
+    width: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #49333f;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cloud-toggle::before {
+    content: "";
+    position: absolute;
+    inset: 6% 4% 38px;
+    border-radius: 44%;
+  }
+  .cloud-toggle:focus-visible {
+    outline: none;
+  }
+  .cloud-toggle:focus-visible::before {
+    outline: 2px solid #6a486b;
+    outline-offset: 6px;
+  }
+  .cloud-name {
+    position: absolute;
+    top: calc(100% - 38px);
+    left: 50%;
+    transform: translateX(-50%);
+    font: 500 clamp(18px, 1.7vw, 25px)/1.2 var(--font-display);
+    text-shadow: 0 1px 9px #fff6e9;
+  }
+  .cloud-label {
+    position: absolute;
+    top: calc(100% - 8px);
+    left: 50%;
+    width: max-content;
+    transform: translateX(-50%);
+    font: 500 9px/1.3 var(--font-code);
+    letter-spacing: 0.025em;
+    opacity: 0.75;
+    text-shadow: 0 1px 8px #fff6e9;
+  }
+  .cloud-items {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    pointer-events: none;
+  }
+  .cloud-item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(calc(-50% + var(--item-x, 0px)), var(--item-y, 0px))
+      rotate(var(--item-rotation, 0deg)) scale(var(--item-scale, 1));
+    opacity: var(--item-opacity, 0);
+    clip-path: inset(0 -100% var(--item-clip, 100%) -100%);
+    visibility: hidden;
+  }
+  .interest-cloud:is([data-open="true"], [data-closing="true"]) .cloud-item {
+    visibility: visible;
+  }
+  .floating-item {
+    position: relative;
+    display: block;
+    width: var(--item-width, 86px);
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #513d58;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .item-artwork {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    filter: drop-shadow(0 5px 5px #39294055);
+    transition: transform 180ms;
+  }
+  .item-artwork img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+  }
+  .hobby-item .item-artwork {
+    padding: 9px;
+    color: #594463;
+    background: #f7ebdcd9;
+    border: 1px solid #fff7e0aa;
+    border-radius: 14px;
+  }
+  .hobby-item svg {
+    width: 100%;
+    height: auto;
+  }
+  .item-image-fallback {
+    display: none;
+    min-height: 64px;
+    padding: 6px;
+    background: #eee1da;
+    font: 10px/1.3 var(--font-code);
+  }
+  .item-artwork[data-image-failed] img {
+    display: none;
+  }
+  .item-artwork[data-image-failed] .item-image-fallback {
+    display: grid;
+    place-items: center;
+  }
+  .floating-item:is(:hover, :focus, [aria-pressed="true"]) .item-artwork {
+    transform: translateY(-4px);
+  }
+  .floating-item:focus-visible {
+    outline: 2px solid #654367;
+    outline-offset: 4px;
+  }
+  .item-caption {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    padding: 4px;
+    color: #332638;
+    opacity: 0;
+    pointer-events: none;
+    text-align: center;
+    text-shadow:
+      0 1px 5px #fff8ed,
+      0 0 12px #fff8ed;
+  }
+  .item-caption strong {
+    display: block;
+    font: 500 15px/1.2 var(--font-display);
+  }
+  .item-caption > span {
+    display: block;
+    margin-top: 4px;
+    font: 9px/1.4 var(--font-code);
+  }
+  .floating-item:is(:hover, :focus, [aria-pressed="true"]) .item-caption {
+    opacity: 1;
+  }
+  .cloud-item:has(.floating-item:is(:hover, :focus, [aria-pressed="true"])) {
+    z-index: 2;
+  }
+  .interest-cloud:has(.floating-item:is(:hover, :focus)) {
+    z-index: 8;
+  }
+  .mobile-cloud-caption {
+    display: none;
+  }
+  @media (max-width: 700px) {
+    .cloud-toggle {
+      bottom: -28px;
+    }
+    .cloud-name {
+      top: calc(100% - 28px);
+      font-size: 17px;
+    }
+    .cloud-label {
+      top: calc(100% - 6px);
+      font-size: 8px;
+    }
+    .hobby-item .item-artwork {
+      padding: 7px;
+      border-radius: 9px;
+    }
+    .item-caption {
+      clip-path: inset(50%);
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+    }
+    .mobile-cloud-caption:not([hidden]) {
+      display: block;
+      position: absolute;
+      bottom: 65px;
+      left: 16px;
+      right: 16px;
+      margin: 0;
+      text-align: center;
+      color: #49333f;
+      text-shadow: 0 1px 8px #fff8ed;
+    }
+    .mobile-cloud-caption strong {
+      display: block;
+      font: 500 15px/1.2 var(--font-display);
+    }
+    .mobile-cloud-caption span {
+      display: block;
+      margin-top: 3px;
+      font: 9px/1.3 var(--font-code);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .item-artwork {
+      transition: none;
+    }
+  }
+  @media (max-width: 360px) {
+    .cloud-label {
+      display: none;
+    }
+  }
+</style>

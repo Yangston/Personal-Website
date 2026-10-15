@@ -40,13 +40,15 @@ const variantAt = (item: Media, width: number) =>
         const large = variantAt(item, 1600);
         return (
           <figure data-manifest-id={item.id}>
-            <button
-              type="button"
+            <a
+              href={large.src}
               class="city-lightbox-trigger"
               data-index={index}
               data-src={large.src}
               data-alt={item.alt}
               aria-label={`Open image: ${item.alt}`}
+              aria-haspopup="dialog"
+              data-astro-reload
             >
               <img
                 src={small.src}
@@ -58,7 +60,7 @@ const variantAt = (item: Media, width: number) =>
                 loading="lazy"
                 decoding="async"
               />
-            </button>
+            </a>
             <figcaption>
               {item.captureDate && (
                 <time datetime={item.captureDate}>
@@ -94,51 +96,197 @@ const variantAt = (item: Media, width: number) =>
 </dialog>
 
 <script>
-  const triggers = Array.from(
-    document.querySelectorAll<HTMLButtonElement>(".city-lightbox-trigger"),
-  );
-  const dialog = document.querySelector<HTMLDialogElement>(".city-lightbox");
-  const image = dialog?.querySelector<HTMLImageElement>("img");
-  const caption = dialog?.querySelector<HTMLParagraphElement>("p");
-  let active = 0;
-  let opener: HTMLButtonElement | undefined;
-
-  const render = () => {
-    const trigger = triggers[active];
-    if (!trigger || !image || !caption) return;
-    image.src = trigger.dataset.src ?? "";
-    image.removeAttribute("srcset");
-    image.alt = trigger.dataset.alt ?? "";
-    caption.textContent = `${active + 1} / ${triggers.length} — ${trigger.dataset.alt ?? ""}`;
+  let releaseGallery = () => {};
+  const cleanupGallery = () => {
+    releaseGallery();
+    releaseGallery = () => {};
   };
-  const step = (amount: number) => {
-    active = (active + amount + triggers.length) % triggers.length;
-    render();
-  };
+  const initializeGallery = () => {
+    cleanupGallery();
+    const triggers = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>(".city-lightbox-trigger"),
+    );
+    const dialog = document.querySelector<HTMLDialogElement>(".city-lightbox");
+    const image = dialog?.querySelector<HTMLImageElement>("img");
+    const caption = dialog?.querySelector<HTMLParagraphElement>("p");
+    if (!dialog || !image || !caption || !triggers.length) return;
+    const events = new AbortController();
+    const options = { signal: events.signal };
+    let active = 0;
+    let opener: HTMLAnchorElement | undefined;
 
-  triggers.forEach((trigger, index) =>
-    trigger.addEventListener("click", () => {
-      active = index;
-      opener = trigger;
+    const render = () => {
+      const trigger = triggers[active];
+      if (!trigger) return;
+      image.src = trigger.href;
+      image.alt = trigger.dataset.alt ?? "";
+      caption.textContent = `${active + 1} / ${triggers.length} — ${trigger.dataset.alt ?? ""}`;
+    };
+    const step = (amount: number) => {
+      active = (active + amount + triggers.length) % triggers.length;
       render();
-      dialog?.showModal();
-      dialog
-        ?.querySelector<HTMLButtonElement>("[data-lightbox-close]")
-        ?.focus();
-    }),
-  );
-  dialog
-    ?.querySelector("[data-lightbox-close]")
-    ?.addEventListener("click", () => dialog.close());
-  dialog
-    ?.querySelector("[data-lightbox-previous]")
-    ?.addEventListener("click", () => step(-1));
-  dialog
-    ?.querySelector("[data-lightbox-next]")
-    ?.addEventListener("click", () => step(1));
-  dialog?.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") step(1);
-    if (event.key === "ArrowLeft") step(-1);
-  });
-  dialog?.addEventListener("close", () => opener?.focus());
+    };
+
+    triggers.forEach((trigger, index) =>
+      trigger.addEventListener(
+        "click",
+        (event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+            return;
+          event.preventDefault();
+          active = index;
+          opener = trigger;
+          render();
+          if (!dialog.open) dialog.showModal();
+          dialog
+            .querySelector<HTMLButtonElement>("[data-lightbox-close]")
+            ?.focus();
+        },
+        options,
+      ),
+    );
+    dialog
+      .querySelector("[data-lightbox-close]")
+      ?.addEventListener("click", () => dialog.close(), options);
+    dialog
+      .querySelector("[data-lightbox-previous]")
+      ?.addEventListener("click", () => step(-1), options);
+    dialog
+      .querySelector("[data-lightbox-next]")
+      ?.addEventListener("click", () => step(1), options);
+    dialog.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+        event.preventDefault();
+        step(event.key === "ArrowRight" ? 1 : -1);
+      },
+      options,
+    );
+    dialog.addEventListener(
+      "close",
+      () => {
+        if (opener?.isConnected) opener.focus({ preventScroll: true });
+      },
+      options,
+    );
+    releaseGallery = () => {
+      opener = undefined;
+      events.abort();
+      if (dialog.open) dialog.close();
+    };
+  };
+  document.addEventListener("astro:page-load", initializeGallery);
+  document.addEventListener("astro:before-swap", cleanupGallery);
+  initializeGallery();
 </script>
+
+<style>
+  .city-gallery {
+    border-top: 1px solid var(--collection-line);
+    background: linear-gradient(135deg, #ffffff40, #dce9ec29);
+    padding-block: clamp(3rem, 7vw, 7rem);
+  }
+  .city-gallery > header .eyebrow {
+    color: var(--collection-accent);
+  }
+  .city-gallery > header h2 {
+    line-height: 0.98;
+    overflow-wrap: anywhere;
+  }
+  .city-gallery > header > p:last-child {
+    color: var(--collection-muted);
+  }
+  .city-lightbox-trigger {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--collection-line);
+    border-radius: 0.2rem;
+    background: #fffaf280;
+    box-shadow: 0 1rem 2.5rem #49335012;
+    cursor: zoom-in;
+  }
+  .city-collage img {
+    transition: transform 450ms var(--ease-out-expo);
+  }
+  .city-lightbox-trigger:hover img {
+    transform: scale(1.015);
+  }
+  .city-collage figcaption {
+    margin-top: 0.5rem;
+    border-color: var(--collection-line);
+    color: var(--collection-muted);
+    line-height: 1.5;
+  }
+  .city-lightbox {
+    margin: 0;
+    background: #f5f0e8f7;
+    color: var(--color-universe-ink);
+    padding: 4.5rem 1.25rem 5.5rem;
+  }
+  .city-lightbox::backdrop {
+    background: var(--color-universe-paper);
+  }
+  .city-lightbox img {
+    height: min(76svh, 62rem);
+  }
+  .city-lightbox button {
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--color-universe-lavender);
+    border-radius: 50%;
+    background: #fffaf2cc;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+  .city-lightbox button:hover,
+  .city-lightbox button:focus-visible {
+    background: var(--color-universe-pearl);
+  }
+  .city-lightbox p {
+    bottom: 1rem;
+    margin: 0 auto;
+    max-width: 65rem;
+    max-height: 3.5rem;
+    overflow-y: auto;
+    line-height: 1.6;
+  }
+  @media (max-width: 700px) {
+    .city-gallery > header h2 {
+      font-size: clamp(2.8rem, 12vw, 4.5rem);
+    }
+    .city-lightbox {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: minmax(0, 1fr) 3rem auto;
+      align-content: stretch;
+      gap: 1rem;
+      padding: 4.75rem 1rem max(1rem, env(safe-area-inset-bottom));
+    }
+    .city-lightbox img {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      height: 100%;
+      min-height: 0;
+    }
+    .city-lightbox [data-lightbox-previous],
+    .city-lightbox [data-lightbox-next] {
+      grid-row: 2;
+      width: 3rem;
+    }
+    .city-lightbox [data-lightbox-previous] {
+      justify-self: end;
+    }
+    .city-lightbox [data-lightbox-next] {
+      justify-self: start;
+    }
+    .city-lightbox p {
+      position: static;
+      grid-column: 1 / -1;
+      grid-row: 3;
+      max-height: 4.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.04em;
+    }
+  }
+</style>

@@ -1,15 +1,25 @@
 ---
 import { render, type CollectionEntry } from "astro:content";
 import DemoLauncher from "@/components/demos/DemoLauncher";
+import { getProjects } from "@/lib/content";
 
 interface Props {
   entry: CollectionEntry<"projects">;
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const { title, summary, year, status, role, stack, cover, links, demo, draft } =
   entry.data;
+const contents = headings.filter((heading) => heading.depth === 2);
+const projects = await getProjects();
+const currentIndex = projects.findIndex((project) => project.id === entry.id);
+const nextProject =
+  projects.length > 1
+    ? projects[(currentIndex + 1) % projects.length]
+    : undefined;
+const primaryUrl =
+  links.live ?? (demo.type === "external" ? demo.url : undefined);
 
 const actionLabel = (url: string) => {
   const hostname = new URL(url).hostname;
@@ -22,7 +32,7 @@ const actionLabel = (url: string) => {
 
 <article class="project-case-study" data-project-case-study>
   <header class="project-case-hero">
-    <a class="project-case-back" href="/projects" data-astro-reload>
+    <a class="project-case-back" href="/#projects">
       <span aria-hidden="true">←</span> Project observatory
     </a>
     <div class="project-case-orbit" aria-hidden="true">
@@ -47,14 +57,14 @@ const actionLabel = (url: string) => {
         </div>
       </dl>
       {
-        links.live && (
+        primaryUrl && (
           <a
             class="project-case-action"
-            href={links.live}
+            href={primaryUrl}
             target="_blank"
             rel="noreferrer"
           >
-            {actionLabel(links.live)} <span aria-hidden="true">↗</span>
+            {actionLabel(primaryUrl)} <span aria-hidden="true">↗</span>
           </a>
         )
       }
@@ -75,7 +85,9 @@ const actionLabel = (url: string) => {
   </header>
 
   <figure class="project-case-cover">
-    <span class="project-case-coordinate">FIG. 001 / SYSTEM VIEW</span>
+    <figcaption class="project-case-coordinate">
+      {cover.src.endsWith(".svg") ? "Project concept / illustration" : title}
+    </figcaption>
     <img
       src={cover.src}
       width={cover.width}
@@ -87,36 +99,77 @@ const actionLabel = (url: string) => {
   </figure>
 
   <div class="project-case-body">
+    {
+      contents.length > 1 && (
+        <nav class="project-case-contents" aria-label="On this page">
+          <p class="eyebrow">In this project</p>
+          <ol>
+            {contents.map((heading, index) => (
+              <li>
+                <a href={`#${heading.slug}`}>
+                  <span aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
     <div class="project-case-copy"><Content /></div>
   </div>
 
   {
-    demo.type !== "none" && (
+    demo.type !== "none" && demo.type !== "external" && (
       <div class="project-case-demo">
-        <DemoLauncher client:visible demo={demo} tone="cosmic" />
+        <DemoLauncher client:visible demo={demo} tone="light" />
       </div>
     )
   }
 
   <footer class="project-case-next">
-    <p class="eyebrow">End of signal</p>
-    <a href="/projects" data-astro-reload>
-      Return to the constellation field <span aria-hidden="true">↗</span>
+    <p class="eyebrow">
+      {nextProject ? "Explore another project" : "Selected work"}
+    </p>
+    <a href={nextProject ? `/projects/${nextProject.id}` : "/#projects"}>
+      {nextProject?.data.title ?? "All projects"}
+      <span aria-hidden="true">↗</span>
     </a>
+    {
+      nextProject && (
+        <p class="project-case-next-summary">{nextProject.data.summary}</p>
+      )
+    }
+    <a class="project-case-all" href="/#projects">Back to all projects</a>
   </footer>
 </article>
 
 <style>
   .project-case-study {
-    --case-paper: #f0eadc;
-    --case-muted: #f0eadc9c;
-    --case-body: #f0eadcd1;
-    --case-line: #f0eadc2e;
+    --case-paper: var(--color-universe-ink);
+    --case-muted: color-mix(in srgb, var(--case-paper) 66%, transparent);
+    --case-body: color-mix(in srgb, var(--case-paper) 84%, transparent);
+    --case-line: color-mix(
+      in srgb,
+      var(--color-universe-lavender) 55%,
+      transparent
+    );
+    --case-accent: color-mix(
+      in srgb,
+      var(--color-universe-coral) 58%,
+      var(--case-paper)
+    );
     position: relative;
     min-height: 100svh;
     overflow: clip;
     color: var(--case-paper);
-    background: linear-gradient(180deg, transparent 0 80svh, #07090df0 110svh);
+    background: linear-gradient(
+      180deg,
+      transparent 0 70svh,
+      var(--color-universe-paper) 110svh
+    );
   }
   .project-case-hero {
     position: relative;
@@ -146,7 +199,7 @@ const actionLabel = (url: string) => {
   }
   .project-case-back:hover,
   .project-case-back:focus-visible {
-    color: #ff7656;
+    color: var(--case-accent);
     transform: translateX(-0.35rem);
   }
   .project-case-title {
@@ -157,7 +210,7 @@ const actionLabel = (url: string) => {
   }
   .project-case-title .eyebrow,
   .project-case-next .eyebrow {
-    color: #ff7656;
+    color: var(--case-accent);
   }
   .project-case-title h1 {
     max-width: 10ch;
@@ -168,6 +221,7 @@ const actionLabel = (url: string) => {
     line-height: 0.82;
     letter-spacing: -0.06em;
     text-wrap: balance;
+    overflow-wrap: anywhere;
   }
   .project-case-intro {
     position: relative;
@@ -191,7 +245,7 @@ const actionLabel = (url: string) => {
     border-top: 1px solid var(--case-line);
   }
   .project-case-meta dt {
-    color: #c4d37b;
+    color: var(--case-accent);
     font: 0.6rem/1 var(--font-code);
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -235,8 +289,9 @@ const actionLabel = (url: string) => {
   }
   .project-case-action {
     padding: 0.95rem 1.15rem;
-    color: #10130e;
-    background: #c4d37b;
+    color: var(--case-paper);
+    background: var(--color-universe-coral);
+    border-radius: 0.2rem;
   }
   .project-case-text-link {
     margin-left: 1.2rem;
@@ -282,15 +337,20 @@ const actionLabel = (url: string) => {
     height: 2px;
     border: 0;
     border-radius: 0;
-    background: linear-gradient(90deg, transparent, #ff7656, transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-universe-coral),
+      transparent
+    );
   }
   .project-case-draft {
     position: absolute;
     right: var(--page-gutter);
     bottom: 2rem;
     padding: 0.5rem 0.7rem;
-    color: #11110f;
-    background: #ff7656;
+    color: var(--case-paper);
+    background: var(--color-universe-coral);
     font: 0.65rem/1 var(--font-code);
     text-transform: uppercase;
   }
@@ -300,8 +360,8 @@ const actionLabel = (url: string) => {
     margin: 0 auto;
     padding: clamp(0.55rem, 1vw, 1rem);
     border: 1px solid var(--case-line);
-    background: #080b10d9;
-    box-shadow: 0 3rem 8rem #0008;
+    background: #fffaf2b8;
+    box-shadow: 0 2rem 5rem #4d3c5614;
   }
   .project-case-cover::before,
   .project-case-cover::after {
@@ -309,7 +369,7 @@ const actionLabel = (url: string) => {
     z-index: 1;
     width: 3rem;
     height: 3rem;
-    border-color: #ff7656;
+    border-color: var(--color-universe-coral);
     content: "";
     pointer-events: none;
   }
@@ -328,7 +388,7 @@ const actionLabel = (url: string) => {
   .project-case-cover img {
     width: 100%;
     height: auto;
-    background: #07090d;
+    background: var(--color-universe-pearl);
   }
   .project-case-coordinate {
     position: absolute;
@@ -336,23 +396,64 @@ const actionLabel = (url: string) => {
     top: 1.6rem;
     left: 1.7rem;
     padding: 0.45rem 0.6rem;
-    color: #f0eadc;
-    background: #07090dcc;
+    color: var(--case-paper);
+    background: #faf6eee8;
     font: 0.58rem/1 var(--font-code);
     letter-spacing: 0.13em;
   }
   .project-case-body {
-    width: min(62rem, calc(100% - var(--page-gutter) * 2));
+    display: grid;
+    grid-template-columns: minmax(10rem, 1fr) minmax(0, 3fr);
+    align-items: start;
+    gap: clamp(2rem, 6vw, 6rem);
+    width: min(76rem, calc(100% - var(--page-gutter) * 2));
     margin: 0 auto;
     padding: clamp(5rem, 9vw, 8rem) 0;
   }
+  .project-case-contents {
+    position: sticky;
+    top: 8rem;
+    color: var(--case-muted);
+  }
+  .project-case-contents .eyebrow {
+    color: var(--case-accent);
+    font-size: 0.6rem;
+  }
+  .project-case-contents ol {
+    display: grid;
+    gap: 1rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .project-case-contents a {
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    text-decoration: none;
+  }
+  .project-case-contents a span {
+    padding-top: 0.2em;
+    color: var(--case-accent);
+    font: 0.55rem/1.8 var(--font-code);
+  }
+  .project-case-contents a:hover,
+  .project-case-contents a:focus-visible {
+    color: var(--case-paper);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
   .project-case-copy {
+    grid-column: 2;
     width: 100%;
     color: var(--case-body);
     font-size: clamp(1.05rem, 1.2vw, 1.15rem);
     line-height: 1.7;
   }
   .project-case-copy :global(h2) {
+    scroll-margin-top: 7rem;
     margin: 2.15em 0 0.65em;
     padding-top: 0.75em;
     border-top: 1px solid var(--case-line);
@@ -374,7 +475,7 @@ const actionLabel = (url: string) => {
     margin: 0 0 1.35em;
   }
   .project-case-copy :global(a) {
-    color: #c4d37b;
+    color: var(--case-accent);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.25em;
   }
@@ -384,10 +485,16 @@ const actionLabel = (url: string) => {
   .project-case-demo {
     padding: 0 var(--page-gutter) clamp(5rem, 10vw, 9rem);
   }
+  .project-case-demo :global(section) {
+    border-color: var(--case-line);
+  }
+  .project-case-demo :global(.text-signal) {
+    color: var(--case-accent);
+  }
   .project-case-next {
     padding: clamp(4rem, 8vw, 7rem) var(--page-gutter);
     border-top: 1px solid var(--case-line);
-    background: #07090dbd;
+    background: linear-gradient(120deg, #dce9ec66, #e2dbea52, transparent);
   }
   .project-case-next a {
     display: inline-block;
@@ -400,7 +507,23 @@ const actionLabel = (url: string) => {
     text-decoration: none;
   }
   .project-case-next a span {
-    color: #c4d37b;
+    color: var(--case-accent);
+  }
+  .project-case-next-summary {
+    max-width: 43rem;
+    margin: 1.8rem 0 0;
+    color: var(--case-body);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .project-case-next .project-case-all {
+    max-width: none;
+    margin-top: 2rem;
+    font: 0.65rem/1.6 var(--font-code);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 0.4em;
   }
   @media (max-width: 900px) {
     .project-case-hero {
@@ -420,6 +543,21 @@ const actionLabel = (url: string) => {
     }
   }
   @media (max-width: 700px) {
+    .project-case-body {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 3rem;
+    }
+    .project-case-contents {
+      position: static;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--case-line);
+    }
+    .project-case-contents ol {
+      gap: 0.9rem;
+    }
+    .project-case-copy {
+      grid-column: 1;
+    }
     .project-case-hero {
       display: block;
       min-height: auto;
